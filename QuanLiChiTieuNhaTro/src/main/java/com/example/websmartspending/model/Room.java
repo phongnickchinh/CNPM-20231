@@ -1,4 +1,4 @@
-package com.example.quanlynhatro.model;
+package com.example.websmartspending.model;
 import javax.persistence.*;
 
 @Entity
