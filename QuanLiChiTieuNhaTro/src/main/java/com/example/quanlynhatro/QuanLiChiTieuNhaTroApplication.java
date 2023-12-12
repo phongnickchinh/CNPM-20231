@@ -1,4 +1,4 @@
-package com.example.QuanLiChiTieuNhaTro;
+package com.example.quanlynhatro;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
