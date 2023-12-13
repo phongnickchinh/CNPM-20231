@@ -1,0 +1,9 @@
+IDUser: 1
+UserName: john_doe
+Password: password123
+PhoneNumber: 123456789
+BankAccountNumber: 1234567890
+BankName: MyBank
+QrCodeurl: https://example.com/qrcode
+Avatarurl: https://example.com/avatar
+--------------

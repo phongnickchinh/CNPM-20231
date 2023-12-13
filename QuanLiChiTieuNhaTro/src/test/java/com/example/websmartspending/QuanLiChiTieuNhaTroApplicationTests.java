@@ -1,4 +1,4 @@
-package com.example.QuanLiChiTieuNhaTro;
+package com.example.websmartspending;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

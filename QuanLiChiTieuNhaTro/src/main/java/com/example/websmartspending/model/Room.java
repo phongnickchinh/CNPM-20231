@@ -1,13 +1,20 @@
 package com.example.websmartspending.model;
 import javax.persistence.*;
+import lombok.Data;
+import java.util.List;
 
 @Entity
+@Data
 @Table(name = "Room")
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idRoom")
     private Long idRoom;
+
+    @ManyToOne // nhiều phòng có thể thuộc về 1 admin
+    @JoinColumn(name = "idUser")
+    private User user;
 
     @Column(name = "roomName")
     private String roomName;
@@ -18,9 +25,15 @@ public class Room {
     @Column(name = "numberOfMember")
     private int numberOfMember;
 
-    @ManyToOne
-    @JoinColumn(name = "idUser")
-    private User user;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<MemberOfRoom> memberOfRooms; // 1 phòng có nhiều thành viên
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<JoinRoomReQuest> joinRoomReQuests; // 1 phòng có nhiều yêu cầu tham gia
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<SmallTransaction> smallTransactions; // 1 phòng có nhiều giao dịch nhỏ
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<UserFeeWithDeadline> feeWithDeadlines; // 1 phòng có nhiều khoản phí có hạn
+
 
     // Constructors
     public Room() {
@@ -33,43 +46,5 @@ public class Room {
     }
 
     // Getters and Setters
-    public Long getIdRoom() {
-        return idRoom;
-    }
-
-    public void setIdRoom(Long idRoom) {
-        this.idRoom = idRoom;
-    }
-
-    public String getRoomName() {
-        return roomName;
-    }
-
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public int getNumberOfMember() {
-        return numberOfMember;
-    }
-
-    public void setNumberOfMember(int numberOfMember) {
-        this.numberOfMember = numberOfMember;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    
 }

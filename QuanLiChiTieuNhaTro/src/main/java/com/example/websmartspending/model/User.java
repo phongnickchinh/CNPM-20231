@@ -1,7 +1,10 @@
 package com.example.websmartspending.model;
 import javax.persistence.*;
+import lombok.Data;
+import java.util.List;
 
 @Entity
+@Data
 @Table(name = "User")
 public class User {
 
@@ -9,6 +12,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "IDUser")
     private Integer idUser;
+
+    @Column(name = "Name")
+    private String name;
 
     @Column(name = "UserName")
     private String userName;
@@ -25,16 +31,32 @@ public class User {
     @Column (name = "BankName")
     private String bankName;
 
-    @Column (name = "QrCodeurl")
+    @Column (name = "QrCode_url")
     private String qrCodeurl;
 
-    @Column (name = "Avatarurl")
+    @Column (name = "Avatar_url")
     private String avatarurl;
+
+    //Các mối quan hệ
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Room> rooms;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<SercurityQuestion> sercurityQuestions;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<MemberOfRoom> memberOfRooms;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<SmallTransaction> smallTransactions;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserFeeWithDeadline> feeWithDeadlines;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<JoinRoomReQuest> joinRoomReQuests;
+    // Constructors
 
     public User() {
     }
-    public User(String userName, String password, String phoneNumber, String bankAccountNumber, String bankName, String qrCodeurl, String avatarurl) {
+    public User(String name, String userName, String password, String phoneNumber, String bankAccountNumber, String bankName, String qrCodeurl, String avatarurl) {
 
+        this.name = name;
         this.userName = userName;
         this.password = password;
         this.phoneNumber = phoneNumber;
@@ -45,56 +67,5 @@ public class User {
 
     }
 
-    public Integer getIdUser() {
-        return idUser;
-    }
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
-    }
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-    public String getBankAccountNumber() {
-        return bankAccountNumber;
-    }
-    public void setBankAccountNumber(String bankAccountNumber) {
-        this.bankAccountNumber = bankAccountNumber;
-    }
-    public String getBankName() {
-        return bankName;
-    }
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-    public String getqrCodeurl() {
-        return qrCodeurl;
-    }
-    public void setQrCodeurl(String qrCodeurl) {
-        this.qrCodeurl = qrCodeurl;
-    }
-    public String getAvatarurl() {
-        return avatarurl;
-    }
-    public void setAvatarurl(String avatarurl) {
-        this.avatarurl = avatarurl;
-    }
-    public String toString() {
-        return "user [id=" + idUser + ", userName=" + userName + ", password=" + password + ", phoneNumber=" + phoneNumber + ", bankAccountNumber=" + bankAccountNumber + ", bankName=" + bankName + ", qrCodeurl=" + qrCodeurl + ", avatarurl=" + avatarurl + "]";
-    }
 
 }
