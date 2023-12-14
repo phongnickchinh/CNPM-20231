@@ -1,8 +1,10 @@
 package com.example.websmartspending.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name = "User")
 public class User {
     @Id
