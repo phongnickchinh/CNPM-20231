@@ -1,5 +1,5 @@
 package com.example.cnpm.quanlythuchinhatro.model;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -31,7 +31,7 @@ public class User {
 
     @Column(name = "qr_code_url")
     private String qrCodeUrl;
-    
+
     @Column(name = "avatar_url")
     private String avatarUrl;
 
@@ -63,4 +63,3 @@ public class User {
     }
 
 }
-
