@@ -1,41 +1,39 @@
 package com.example.cnpm.quanlythuchinhatro.model;
-import javax.persistence.*;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "Room")
 public class Room {
-    //id
-    //user_id
-    //name
-    //number_of_member
-    //address
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "id_user")
-    private Integer idUser;
-
+    //room name
     @Column(name = "name")
-    private String name;
+    private String roomName;
 
+    //numberofmember
     @Column(name = "number_of_member")
     private Integer numberOfMember;
-    
-    @Column(name = "address")
-    private String address;
 
+    @Column(name = "user_id")
+    private Integer user;
+
+
+
+    //constructor
     public Room() {
     }
-    public Room(Integer idUser, String name, Integer numberOfMember, String address) {
-        this.idUser = idUser;
-        this.name = name;
+    public Room(String roomName, Integer numberOfMember, Integer user) {
+        this.roomName = roomName;
         this.numberOfMember = numberOfMember;
-        this.address = address;
+        this.user = user;
     }
+
+
     
 }

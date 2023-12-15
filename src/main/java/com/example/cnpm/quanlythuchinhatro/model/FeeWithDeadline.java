@@ -1,6 +1,8 @@
 package com.example.cnpm.quanlythuchinhatro.model;
+
 import javax.persistence.*;
-import lombok.*;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -8,42 +10,44 @@ import java.util.Date;
 @Data
 @Table(name = "FeeWithDeadline")
 public class FeeWithDeadline {
-    //id
-    //room_id
-    //name
-    //money
-    //deadline
-    //type
 
+    //id
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "id_room")
-    private Integer idRoom;
+    //room_id
+    @Column(name = "room_id")
+    private Integer roomId;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "money")
-    private BigDecimal money;
-
+    //name
+    @Column(name = "fee_name")
+    private String feeName;
+    //deadline
     @Column(name = "deadline")
     private Date deadline;
-    
+    //status
+    @Column(name = "status")
+    private Integer status;
+    //money
+    @Column(name = "money")
+    private BigDecimal money;
+    //type
     @Column(name = "type")
     private Integer type;
 
+    //constructor
+
     public FeeWithDeadline() {
     }
-    public FeeWithDeadline(Integer idRoom, String name, BigDecimal money, Date deadline, Integer type) {
-        this.idRoom = idRoom;
-        this.name = name;
-        this.money = money;
+    public FeeWithDeadline(Integer roomId, String feeName, Date deadline, Integer status, BigDecimal money, Integer type) {
+        this.roomId = roomId;
+        this.feeName = feeName;
         this.deadline = deadline;
+        this.status = status;
+        this.money = money;
         this.type = type;
     }
-
     
 }
