@@ -1,6 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
