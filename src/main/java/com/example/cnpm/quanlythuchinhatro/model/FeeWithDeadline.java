@@ -20,34 +20,29 @@ public class FeeWithDeadline {
     //room_id
     @Column(name = "room_id")
     private Integer roomId;
-
     //name
     @Column(name = "fee_name")
     private String feeName;
     //deadline
     @Column(name = "deadline")
     private Date deadline;
-    //status
-    @Column(name = "status")
-    private Integer status;
     //money
     @Column(name = "money")
     private BigDecimal money;
-    //type
-    @Column(name = "type")
-    private Integer type;
+    //status
+    @Column(name = "status")
+    private Integer status=0;
 
     //constructor
 
     public FeeWithDeadline() {
     }
-    public FeeWithDeadline(Integer roomId, String feeName, Date deadline, Integer status, BigDecimal money, Integer type) {
+    public FeeWithDeadline(Integer roomId, String feeName, Date deadline, Integer status, BigDecimal money) {
         this.roomId = roomId;
         this.feeName = feeName;
         this.deadline = deadline;
         this.status = status;
         this.money = money;
-        this.type = type;
     }
-    
+
 }
