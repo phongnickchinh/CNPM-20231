@@ -1,6 +1,7 @@
 package com.example.cnpm.quanlythuchinhatro.model;
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.Date;
 
 //tạo một thựcthể liên kết giữa room và user
 @Entity
@@ -19,6 +20,14 @@ public class MemberOfRoom {
     //user_id
     @Column(name = "user_id")
     private Integer userId;
+
+    //join_date
+    @Column(name = "join_date")
+    private Date joinDate;
+
+    //out_date
+    @Column(name = "out_date")
+    private Date outDate;
 
     //status
     @Column(name = "status")

@@ -1,9 +1,7 @@
 package com.example.cnpm.quanlythuchinhatro.controller;
 
 import com.example.cnpm.quanlythuchinhatro.model.FeeWithDeadline;
-import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.service.FeeWithDeadlineService;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

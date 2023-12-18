@@ -1,7 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
 import com.example.cnpm.quanlythuchinhatro.model.FeeWithDeadline;
-import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.repository.FeeWithDeadlineRepository;
 import org.springframework.stereotype.Service;
 

@@ -21,17 +21,17 @@ public class Room {
     private Integer numberOfMember;
 
     @Column(name = "user_id")
-    private Integer user;
+    private Integer userId;
 
 
 
     //constructor
     public Room() {
     }
-    public Room(String roomName, Integer numberOfMember, Integer user) {
+    public Room(String roomName, Integer numberOfMember, Integer userId) {
         this.roomName = roomName;
         this.numberOfMember = numberOfMember;
-        this.user = user;
+        this.userId = userId;
     }
 
 
