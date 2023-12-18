@@ -1,8 +1,16 @@
 HELP.md
 target/
+<<<<<<< HEAD
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+=======
+pom.xml
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+src/main/resources/application.properties
+>>>>>>> 3e7d563764e39ac25b8931ebbecbc8a234a33874
 
 ### STS ###
 .apt_generated
