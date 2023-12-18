@@ -19,16 +19,16 @@ public class SecurityQuestion {
 
     @Column(name="user_id")
     private Integer userId;
-    @Column(name="room_id")
-    private Integer roomId;
-    @Column(name="status")
-    private Integer status;
-
+    @Column(name = "question")
+    private String question;
+    @Column (name= "answer")
+    private String answer;
     public SecurityQuestion() {
     }
-    public SecurityQuestion(Integer userId, Integer roomId, Integer status) {
+    public SecurityQuestion(Integer userId, String question, String answer) {
         this.userId = userId;
-        this.roomId = roomId;
-        this.status = status;
-    }    
+        this.question=question;
+        this.answer=answer;
+    }
+    
 }
