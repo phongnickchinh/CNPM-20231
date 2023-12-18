@@ -2,11 +2,13 @@ package com.example.cnpm.quanlythuchinhatro.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
+import com.example.cnpm.quanlythuchinhatro.dto.UserLoginRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UserRequest;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
@@ -19,6 +21,7 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	
 	 @Autowired
 	 private BCryptPasswordEncoder passwordEncoder;
+	 
 	
 	 @Override
 	 public ResponseEntity<?> registerUser(UserRequest userRequest) {
@@ -80,5 +83,32 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	        }
 
 	        return null; // Hoặc có thể ném một ngoại lệ để xử lý tình huống người dùng không tồn tại
+	    }
+
+	 @Override
+	    public ResponseEntity<?> changePassword(UserLoginRequest loginRequest, String newPassword) {
+	        User user = userRepository.findByUsername(loginRequest.getUsername());
+
+	        if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+	            // Mật khẩu hiện tại hợp lệ
+	            user.setPassword(passwordEncoder.encode(newPassword)); // Mã hóa mật khẩu mới
+	            userRepository.save(user);
+	            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>("Invalid current password", HttpStatus.UNAUTHORIZED);
+	        }
+	    }
+	 
+	 @Override
+	    public ResponseEntity<String> resetPassword(String username, String newPassword) {
+	        User user = userRepository.findByUsername(username);
+
+	        if (user != null) {
+	            user.setPassword(passwordEncoder.encode(newPassword));
+	            userRepository.save(user);
+	            return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
+	        } else {
+	            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+	        }
 	    }
 }

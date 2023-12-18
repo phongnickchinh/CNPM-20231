@@ -33,8 +33,6 @@ public class FeeWithDeadline {
     @Column(name = "status")
     private Integer status=0;
 
-    //constructor
-
     public FeeWithDeadline() {
     }
     public FeeWithDeadline(Integer roomId, String feeName, Date deadline, Integer status, BigDecimal money) {

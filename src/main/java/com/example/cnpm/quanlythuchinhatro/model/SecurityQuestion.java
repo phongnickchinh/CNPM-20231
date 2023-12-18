@@ -11,24 +11,31 @@ public class SecurityQuestion {
     //question
     //answer
 
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     @Column(name = "id")
-    private Long id;
+    
+    private Integer id;
 
     @Column(name="user_id")
     private Integer userId;
-    @Column(name="room_id")
-    private Integer roomId;
-    @Column(name="status")
-    private Integer status;
-
+    
+    @Column(name = "question")
+    private String question;
+    
+    @Column (name= "answer")
+    private String answer;
+    
     public SecurityQuestion() {
     }
-    public SecurityQuestion(Integer userId, Integer roomId, Integer status) {
+    
+    public SecurityQuestion(Integer userId, String question, String answer) {
         this.userId = userId;
-        this.roomId = roomId;
-        this.status = status;
-    }    
+        this.question=question;
+        this.answer=answer;
+    }
+    @ManyToOne
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
+    private User user;
 }
