@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UserRequest;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
@@ -40,6 +41,7 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	
 	     return ResponseEntity.ok().build();
 	 }
+	 
 	 @Override
 	 public String login(String username, String password) {
 	     User user = userRepository.findByUsername(username);
@@ -54,4 +56,29 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	
 	     return "Login successful";
 	 }
+	 
+	 @Override
+	    public void logout(String username) {
+	    }
+	 
+	 @Override
+	    public User updateUser(String username, UpdateUserRequest updateUserRequest) {
+	        User user = userRepository.findByUsername(username);
+
+	        if (user != null) {
+	            // Cập nhật thông tin người dùng
+	            user.setName(updateUserRequest.getFullname());
+	            user.setPhoneNumber(updateUserRequest.getPhoneNumber());
+	            user.setBankName(updateUserRequest.getBankName());
+	            user.setBankAccountNumber(updateUserRequest.getBankNumber());
+	            user.setAvatarUrl(updateUserRequest.getAvatarUrl());
+
+	            // Lưu thông tin cập nhật vào cơ sở dữ liệu
+	            userRepository.save(user);
+
+	            return user;
+	        }
+
+	        return null; // Hoặc có thể ném một ngoại lệ để xử lý tình huống người dùng không tồn tại
+	    }
 }
