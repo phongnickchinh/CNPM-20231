@@ -4,8 +4,8 @@ import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.service.UserFeeWithDeadlineService;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
+
 @RestController
 @RequestMapping("/userFeeWD")
 public class UserFeeWithDeadlineController {
@@ -14,8 +14,15 @@ public class UserFeeWithDeadlineController {
     public UserFeeWithDeadlineController(UserFeeWithDeadlineService userFeeWithDeadlineService) {
         this.userFeeWithDeadlineService = userFeeWithDeadlineService;
     }
+
     @GetMapping("/getAll")
-    public List<UserFeeWithDeadline> getStatusFeeWithDeadline(@RequestParam("id") Integer id) {
-        return userFeeWithDeadlineService.getStatusFeeWithDeadline(id);
+    public List<UserFeeWithDeadline> getStatusFeeWithDeadlineByRoomId(@RequestParam("roomId") Integer roomId) {
+        // Sử dụng service để lấy dữ liệu dựa theo roomId
+        return userFeeWithDeadlineService.getStatusFeeWithDeadlineByRoomId(roomId);
     }
+    @GetMapping("/")
+    public String helo() {
+        return "Hello Hồng Ngọc";
+    }
+
 }

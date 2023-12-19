@@ -18,13 +18,16 @@ public class UserFeeWithDeadline {
     private Integer feeId;
     @Column(name="status")
     private Integer status;
+    @Column(name = "room_id")
+    private Integer roomId;
 
     public UserFeeWithDeadline() {
     }
-    public UserFeeWithDeadline(Integer userId, Integer feeId, Integer status) {
+    public UserFeeWithDeadline(Integer userId, Integer feeId, Integer status, Integer roomId) {
         this.userId = userId;
         this.feeId = feeId;
         this.status = status;
+        this.roomId = roomId;
     }
 
     

@@ -4,17 +4,18 @@ import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.repository.UserFeeWithDeadlineRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
+
 @Service
-public class UserFeeWithDeadlineServiceImpl implements UserFeeWithDeadlineService{
+public class UserFeeWithDeadlineServiceImpl implements UserFeeWithDeadlineService {
     private final UserFeeWithDeadlineRepository userFeeWithDeadlineRepository;
 
     public UserFeeWithDeadlineServiceImpl(UserFeeWithDeadlineRepository userFeeWithDeadlineRepository) {
         this.userFeeWithDeadlineRepository = userFeeWithDeadlineRepository;
     }
     @Override
-    public List<UserFeeWithDeadline> getStatusFeeWithDeadline(Integer id) {
-        return userFeeWithDeadlineRepository.findAllById(id);
+    public List<UserFeeWithDeadline> getStatusFeeWithDeadlineByRoomId(Integer roomId) {
+        // Lấy all UserFeeWithDeadline theo roomId
+        return userFeeWithDeadlineRepository.findByFeeWithDeadline_RoomId(roomId);
     }
 }
