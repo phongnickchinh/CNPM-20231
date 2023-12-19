@@ -32,17 +32,41 @@ public class UserController {
 	 
 	 @Autowired
 	 private SecurityQuestionService securityQuestionService;
-	
+	 
+	 @GetMapping("dashboard")
+	 public String mainPage() {
+	        return "dashboard"; 
+	 }
+	 
+	 @GetMapping("login")
+	 public String getLoginPage() {
+	        return "login"; 
+	 }
+	 
+	 @GetMapping("signup")
+	 public String getSignup() {
+	        return "signup"; 
+	 }
+	 
+	 
 	 @PostMapping("signup")
 	 public ResponseEntity<?> signup(@RequestBody UserRequest userRequest) {
-	     return userService.registerUser(userRequest);
+		   ResponseEntity<?> registrationResult = userService.registerUser(userRequest);
+
+	        if (registrationResult.getStatusCode() == HttpStatus.OK) {
+	            // Registration successful, redirect to the main page
+	            return new ResponseEntity<>("redirect:/dashboard", HttpStatus.OK);
+	        } else {
+	            // Registration failed, return the original result
+	            return registrationResult;
+	        }
 	 }
 	 @PostMapping("login")
 	    public ResponseEntity<String> login(@RequestBody UserLoginRequest userLoginRequest) {
 	        String result = userService.login(userLoginRequest.getUsername(), userLoginRequest.getPassword());
 
 	        if ("Login successful".equals(result)) {
-	            return new ResponseEntity<>(result, HttpStatus.OK);
+	            return new ResponseEntity<>("redirect:/dashboard", HttpStatus.OK);
 	        } else if ("USERNAME_DOESNOT_EXIST".equals(result)) {
 	            return new ResponseEntity<>("USERNAME_DOESNOT_EXIST", HttpStatus.UNAUTHORIZED);
 	        } else {
@@ -52,15 +76,9 @@ public class UserController {
 	 @PostMapping("logout")
 	    public ResponseEntity<String> logout(@RequestBody UserLogoutRequest userLogoutRequest) {
 	        userService.logout(userLogoutRequest.getUsername());
-	        return new ResponseEntity<>("Logout successful", HttpStatus.OK);
+	        return new ResponseEntity<>("redirect:/login", HttpStatus.OK);
 	    }
 
-	    // Chuyển hướng về trang đăng nhập sau khi đăng xuất
-	    @GetMapping("login")
-	    public String redirectToLogin() {
-	        return "redirect:/login";
-	    }
-	    
 	    @PutMapping("user/{username}")
 	    public ResponseEntity<User> updateUser(@PathVariable String username, @RequestBody UpdateUserRequest updateUserRequest) {
 	        User updatedUser = userService.updateUser(username, updateUserRequest);
