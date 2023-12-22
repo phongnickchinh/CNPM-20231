@@ -19,4 +19,6 @@ public interface UserSevice {
 	User updateUser(String username, UpdateUserRequest updateUserRequest);
 	
 	ResponseEntity<String> resetPassword(String username, String newPassword);
+	
+	String addUser(UserRequest userRequest);
 }

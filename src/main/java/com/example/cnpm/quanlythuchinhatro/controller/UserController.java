@@ -36,6 +36,8 @@ public class UserController {
 	 @GetMapping("dashboard")
 	 public String mainPage() {
 	        return "dashboard"; 
+	        
+	        
 	 }
 	 
 	 @GetMapping("login")
@@ -48,7 +50,11 @@ public class UserController {
 	        return "signup"; 
 	 }
 	 
-	 
+	 @PostMapping("save")
+	 public String saveUser(@RequestBody UserRequest userRequest) {
+		 String id = userService.addUser(userRequest);
+		 return id;
+	 }
 	 @PostMapping("signup")
 	 public ResponseEntity<?> signup(@RequestBody UserRequest userRequest) {
 		   ResponseEntity<?> registrationResult = userService.registerUser(userRequest);

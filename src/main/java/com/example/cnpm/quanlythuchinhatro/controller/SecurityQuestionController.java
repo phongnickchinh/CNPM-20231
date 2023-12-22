@@ -32,7 +32,7 @@ public class SecurityQuestionController {
  }
 
  // Endpoint để thêm câu hỏi bảo mật cho người dùng
- @PostMapping("/questions/{username}")
+ @PostMapping("/addquestions/{username}")
  public ResponseEntity<String> saveSecurityQuestions(
          @PathVariable String username,
          @RequestBody List<SecurityQuestion> securityQuestions) {
@@ -41,7 +41,7 @@ public class SecurityQuestionController {
  }
 
  // Endpoint để cập nhật câu hỏi bảo mật của người dùng
- @PutMapping("/questions/{username}")
+ @PutMapping("/updatequestions/{username}")
  public ResponseEntity<String> updateSecurityQuestions(
          @PathVariable String username,
          @RequestBody List<SecurityQuestion> securityQuestions) {
@@ -50,7 +50,7 @@ public class SecurityQuestionController {
  }
 
  // Endpoint để xóa câu hỏi bảo mật của người dùng
- @DeleteMapping("/questions/{username}")
+ @DeleteMapping("/deletequestions/{username}")
  public ResponseEntity<String> deleteSecurityQuestions(@PathVariable String username) {
      securityQuestionService.deleteSecurityQuestions(username);
      return new ResponseEntity<>("Security questions deleted successfully", HttpStatus.OK);

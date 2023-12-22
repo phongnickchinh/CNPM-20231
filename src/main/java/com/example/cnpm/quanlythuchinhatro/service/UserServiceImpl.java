@@ -112,4 +112,15 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 	        }
 	    }
+
+	@Override
+	public String addUser(UserRequest userRequest) {
+		User user = new User(
+				userRequest.getFullname(),
+				userRequest.getUsername(),
+				this.passwordEncoder.encode(userRequest.getPassword())
+		);
+		userRepository.save(user);
+		return user.getUsername();
+	}
 }
