@@ -50,4 +50,5 @@ public class UserRequest {
 	     user.setPassword(this.password);
 	     return user;
 	 }
+
 }

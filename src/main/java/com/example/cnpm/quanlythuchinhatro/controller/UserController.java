@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,18 +70,22 @@ public class UserController {
 	            return registrationResult;
 	        }
 	 }
-	 @PostMapping("login")
+	 @PostMapping("/login")
 	    public ResponseEntity<String> login(@RequestBody UserLoginRequest userLoginRequest) {
-	        String result = userService.login(userLoginRequest.getUsername(), userLoginRequest.getPassword());
+	        String username = userLoginRequest.getUsername();
+	        String password = userLoginRequest.getPassword();
+
+	        String result = userService.login(username, password);
 
 	        if ("Login successful".equals(result)) {
-	            return new ResponseEntity<>("redirect:/dashboard", HttpStatus.OK);
+	            return new ResponseEntity<>("Login successful", HttpStatus.OK);
 	        } else if ("USERNAME_DOESNOT_EXIST".equals(result)) {
 	            return new ResponseEntity<>("USERNAME_DOESNOT_EXIST", HttpStatus.UNAUTHORIZED);
 	        } else {
 	            return new ResponseEntity<>("WRONG_PASSWORD", HttpStatus.UNAUTHORIZED);
 	        }
 	    }
+	 
 	 @PostMapping("logout")
 	    public ResponseEntity<String> logout(@RequestBody UserLogoutRequest userLogoutRequest) {
 	        userService.logout(userLogoutRequest.getUsername());
@@ -119,6 +126,17 @@ public class UserController {
 	            @RequestParam String username,
 	            @RequestParam String newPassword) {
 	        return userService.resetPassword(username, newPassword);
+	    }
+	    
+	    public String getCurrentUsername() {
+	        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+	        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+	            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+	            return userDetails.getUsername();
+	        }
+
+	        return "AnonymousUser";
 	    }
 }
 

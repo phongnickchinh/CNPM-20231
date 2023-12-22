@@ -4,6 +4,8 @@ package com.example.cnpm.quanlythuchinhatro.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -47,20 +49,21 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	 }
 	 
 	 @Override
-	 public String login(String username, String password) {
-	     User user = userRepository.findByUsername(username);
-	
-	     if (user == null) {
-	         return "USERNAME_DOESNOT_EXIST";
-	     }
-	
-	     if (!user.getPassword().equals(password)) {
-	         return "WRONG_PASSWORD";
-	     }
-	
-	     return "Login successful";
-	 }
-	 
+	 public User findByUsername(String username) {
+	        return userRepository.findByUsername(username);
+	    }
+
+	    public String login(String username, String password) {
+	        User user = findByUsername(username);
+
+	        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+	            return "Login successful";
+	        } else if (user == null) {
+	            return "USERNAME_DOESNOT_EXIST";
+	        } else {
+	            return "WRONG_PASSWORD";
+	        }
+	    }
 	 @Override
 	    public void logout(String username) {
 	    }
