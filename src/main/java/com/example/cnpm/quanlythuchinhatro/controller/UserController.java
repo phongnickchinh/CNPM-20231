@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,11 +39,11 @@ public class UserController {
 	 private SecurityQuestionService securityQuestionService;
 	 
 	 @GetMapping("dashboard")
-	 public String mainPage() {
-	        return "dashboard"; 
-	        
-	        
-	 }
+	    public String dashboard(@AuthenticationPrincipal User user, Model model) {
+	        // Thông tin người dùng được truyền tự động thông qua @AuthenticationPrincipal
+	        model.addAttribute("user", user);
+	        return "dashboard";
+	    }
 	 
 	 @GetMapping("login")
 	 public String getLoginPage() {
@@ -78,7 +80,7 @@ public class UserController {
 	        String result = userService.login(username, password);
 
 	        if ("Login successful".equals(result)) {
-	            return new ResponseEntity<>("Login successful", HttpStatus.OK);
+	            return new ResponseEntity<>("redirect:/dashboard", HttpStatus.OK);
 	        } else if ("USERNAME_DOESNOT_EXIST".equals(result)) {
 	            return new ResponseEntity<>("USERNAME_DOESNOT_EXIST", HttpStatus.UNAUTHORIZED);
 	        } else {
