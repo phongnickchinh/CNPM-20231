@@ -1,20 +1,19 @@
 package com.example.cnpm.quanlythuchinhatro.repository;
 
-
 import com.example.cnpm.quanlythuchinhatro.model.FeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
 import java.util.List;
 
-@Repository
-public interface UserFeeWithDeadlineRepository extends JpaRepository<UserFeeWithDeadline, Integer> {
-    //Native query
-    @Query(value = "SELECT u.fee_id, u.user_id, u.status_fee, f.fee_name, f.money FROM user_fee_with_deadline u " +
-            "INNER JOIN fee_with_deadline f ON u.fee_id = f.id " +
-            "WHERE f.room_id = :roomId", nativeQuery = true)
-    List<UserFeeWithDeadline> findByFeeWithDeadline_RoomId(Integer roomId);
+public interface UserFeeWithDeadlineRepository extends JpaRepository<UserFeeWithDeadline, Long> {
+    @Query("SELECT u.userId AS userId, u.feeId AS feeId, f.feeName AS feeName, f.deadline AS deadline, u.status AS status " +
+            ", f.money / ((SELECT COUNT(*) FROM UserFeeWithDeadline WHERE roomId = : roomId AND feeId = u.feeId )) AS pricePerUser " +
+            "FROM UserFeeWithDeadline u " +
+            "JOIN FeeWithDeadline f ON u.feeId = f.id " +
+            "WHERE u.roomId = :roomId " +
+            "GROUP BY u.userId, u.feeId, f.feeName, f.deadline, f.money, u.status ")
+    List<Object[]> findByRoomId(@Param("roomId") Integer roomId);
 }
