@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UserFeeWithDeadlineService {
     public List<Object[]> getStatusFeeWithDeadline(Integer roomId);
+    public List<Object[]> getUserStatusFeeWithDeadline(Integer roomId, Integer userId);
+    boolean toggleFeeStatus(Integer userId, Integer feeId);
 }
