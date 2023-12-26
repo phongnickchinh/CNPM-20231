@@ -1,59 +1,48 @@
 package com.example.cnpm.quanlythuchinhatro.controller;
-
-//SecurityQuestionAdminController.java
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.example.cnpm.quanlythuchinhatro.dto.SecurityQuestionDTO;
 import com.example.cnpm.quanlythuchinhatro.model.SecurityQuestion;
 import com.example.cnpm.quanlythuchinhatro.service.SecurityQuestionService;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/security")
+@RequestMapping("/security-question")
 public class SecurityQuestionController {
 
- @Autowired
- private SecurityQuestionService securityQuestionService;
+    @Autowired
+    private SecurityQuestionService securityQuestionService;
 
- // Endpoint để lấy danh sách câu hỏi bảo mật của người dùng
- @GetMapping("/questions/{username}")
- public ResponseEntity<List<SecurityQuestion>> getSecurityQuestions(@PathVariable String username) {
-     List<SecurityQuestion> securityQuestions = securityQuestionService.getSecurityQuestionsByUsername(username);
-
-     if (securityQuestions != null) {
-         return new ResponseEntity<>(securityQuestions, HttpStatus.OK);
-     } else {
-         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-     }
- }
-
- // Endpoint để thêm câu hỏi bảo mật cho người dùng
- @PostMapping("/addquestions/{username}")
- public ResponseEntity<String> saveSecurityQuestions(
-         @PathVariable String username,
-         @RequestBody List<SecurityQuestion> securityQuestions) {
-     securityQuestionService.saveSecurityQuestions(username, securityQuestions);
-     return new ResponseEntity<>("Security questions saved successfully", HttpStatus.OK);
- }
-
- // Endpoint để cập nhật câu hỏi bảo mật của người dùng
- @PutMapping("/updatequestions/{username}")
- public ResponseEntity<String> updateSecurityQuestions(
-         @PathVariable String username,
-         @RequestBody List<SecurityQuestion> securityQuestions) {
-     securityQuestionService.updateSecurityQuestions(username, securityQuestions);
-     return new ResponseEntity<>("Security questions updated successfully", HttpStatus.OK);
- }
-
- // Endpoint để xóa câu hỏi bảo mật của người dùng
- @DeleteMapping("/deletequestions/{username}")
- public ResponseEntity<String> deleteSecurityQuestions(@PathVariable String username) {
-     securityQuestionService.deleteSecurityQuestions(username);
-     return new ResponseEntity<>("Security questions deleted successfully", HttpStatus.OK);
- }
+    @PostMapping("/add")
+    public ResponseEntity<?> addSecurityQuestion(@RequestBody SecurityQuestion request) {
+        return securityQuestionService.addSecurityQuestion(request.getUserId(), request.getQuestion(), request.getAnswer());
+    }
+    
+    @GetMapping("/get")
+    public ResponseEntity<List<String>> getSecurityQuestions(@RequestParam Integer userId) {
+        List<String> securityQuestions = securityQuestionService.getSecurityQuestionsByUserId(userId);
+        return ResponseEntity.ok(securityQuestions);
+    }
+    
+    
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteSecurityQuestions(@RequestParam Integer userId) {
+        securityQuestionService.deleteSecurityQuestions(userId);
+        return ResponseEntity.ok("Security questions deleted successfully.");
+    }
+    
+    @PostMapping("/update")
+    public ResponseEntity<String> updateSecurityQuestion(@RequestParam Integer userId, @RequestBody SecurityQuestionDTO updatedQuestion) {
+        securityQuestionService.updateSecurityQuestion(userId, updatedQuestion);
+        return ResponseEntity.ok("Security question updated successfully.");
+    }
 }
-

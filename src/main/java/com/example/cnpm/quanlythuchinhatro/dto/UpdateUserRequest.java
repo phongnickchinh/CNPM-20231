@@ -2,6 +2,7 @@ package com.example.cnpm.quanlythuchinhatro.dto;
 
 
 public class UpdateUserRequest {
+ private Integer userId;
  private String fullname;
  private String phoneNumber;
  private String bankName;
@@ -12,15 +13,24 @@ public class UpdateUserRequest {
  public UpdateUserRequest() {
  }
 
- public UpdateUserRequest(String fullname, String phoneNumber, String bankName, String bankNumber, String avatarUrl) {
-     this.fullname = fullname;
+ public UpdateUserRequest(Integer userId,String fullname, String phoneNumber, String bankName, String bankNumber, String avatarUrl) {
+     this.userId = userId;
+	 this.fullname = fullname;
      this.phoneNumber = phoneNumber;
      this.bankName = bankName;
      this.bankNumber = bankNumber;
      this.avatarUrl = avatarUrl;
  }
 
- // Getters and setters
+ public Integer getUserId() {
+	return userId;
+}
+
+public void setUserId(Integer userId) {
+	this.userId = userId;
+}
+
+// Getters and setters
  public String getFullname() {
      return fullname;
  }
@@ -60,5 +70,7 @@ public class UpdateUserRequest {
  public void setAvatarUrl(String avatarUrl) {
      this.avatarUrl = avatarUrl;
  }
+
+
 }
 

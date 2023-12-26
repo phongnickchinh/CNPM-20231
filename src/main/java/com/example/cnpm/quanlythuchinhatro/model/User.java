@@ -63,7 +63,5 @@ public class User {
     public User(String username, String password, String name, String phoneNumber, String bankAccountNumber) {
         this(username, password, name, phoneNumber, bankAccountNumber, "DefaultBankName", "DefaultQrCodeUrl", "DefaultAvatarUrl");
     }
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<SecurityQuestion> securityQuestions;
-
+   
 }

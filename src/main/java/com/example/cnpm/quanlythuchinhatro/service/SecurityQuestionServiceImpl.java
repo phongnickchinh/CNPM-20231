@@ -1,82 +1,63 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
-//SecurityQuestionServiceImpl.java
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.example.cnpm.quanlythuchinhatro.dto.SecurityQuestionDTO;
 import com.example.cnpm.quanlythuchinhatro.model.SecurityQuestion;
-import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.repository.SecurityQuestionRepository;
-import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
-
-import java.util.List;
 
 @Service
 public class SecurityQuestionServiceImpl implements SecurityQuestionService {
 
- @Autowired
- private SecurityQuestionRepository securityQuestionRepository;
+    @Autowired
+    private SecurityQuestionRepository securityQuestionRepository;
 
- @Autowired
- private UserRepository userRepository;
+    @Override
+    public ResponseEntity<?> addSecurityQuestion(Integer userId, String question, String answer) {
+        SecurityQuestion securityQuestion = new SecurityQuestion();
+        securityQuestion.setUserId(userId);
+        securityQuestion.setQuestion(question);
+        securityQuestion.setAnswer(answer);
 
- @Override
- public List<SecurityQuestion> getSecurityQuestionsByUsername(String username) {
-     User user = userRepository.findByUsername(username);
-     return user != null ? user.getSecurityQuestions() : null;
- }
+        securityQuestionRepository.save(securityQuestion);
 
- @Override
- public void saveSecurityQuestions(String username, List<SecurityQuestion> securityQuestions) {
-     User user = userRepository.findByUsername(username);
+        return new ResponseEntity<>("Security question added successfully", HttpStatus.OK);
+    }
+    
+    @Override
+    public List<String> getSecurityQuestionsByUserId(Integer userId) {
+        List<SecurityQuestion> securityQuestions = securityQuestionRepository.findByUserId(userId);
+        return securityQuestions.stream()
+                .map(SecurityQuestion::getQuestion)
+                .collect(Collectors.toList());
+    }
+    
+    
+    @Override
+    public void deleteSecurityQuestions(Integer userId) {
+        securityQuestionRepository.deleteByUserId(userId);
+    }
+    
+    @Override
+    public void updateSecurityQuestion(Integer userId, SecurityQuestionDTO updatedQuestion) {
+        // Lấy câu hỏi và đáp án cũ
+        SecurityQuestion existingQuestion = securityQuestionRepository
+                .findByUserIdAndQuestion(userId, updatedQuestion.getQuestion())
+                .orElseThrow(() -> new RuntimeException("Question not found"));
 
-     if (user != null) {
-         // Xóa câu hỏi bảo mật cũ của người dùng
-         securityQuestionRepository.deleteAllByUser(user);
+        // Kiểm tra câu trả lời đúng trước đó
+        if (!existingQuestion.getAnswer().equals(updatedQuestion.getOldAnswer())) {
+            throw new RuntimeException("Incorrect previous answer");
+        }
 
-         // Lưu câu hỏi bảo mật mới
-         for (SecurityQuestion question : securityQuestions) {
-             question.setUser(user);
-             securityQuestionRepository.save(question);
-         }
-     }
- }
-
- @Override
- public void updateSecurityQuestions(String username, List<SecurityQuestion> securityQuestions) {
-     // Tương tự như saveSecurityQuestions, nhưng không xóa câu hỏi cũ mà chỉ cập nhật
-     User user = userRepository.findByUsername(username);
-
-     if (user != null) {
-         for (SecurityQuestion question : securityQuestions) {
-             question.setUser(user);
-             securityQuestionRepository.save(question);
-         }
-     }
- }
-
- @Override
- public void deleteSecurityQuestions(String username) {
-     User user = userRepository.findByUsername(username);
-     if (user != null) {
-         securityQuestionRepository.deleteAllByUser(user);
-     }
- }
- 
- @Override
- public boolean verifySecurityAnswers(String username, List<SecurityQuestion> answers) {
-     User user = userRepository.findByUsername(username);
-
-     if (user != null) {
-         for (SecurityQuestion answer : answers) {
-             SecurityQuestion storedAnswer = securityQuestionRepository.findByUserAndQuestion(user, answer.getQuestion());
-             if (storedAnswer == null || !storedAnswer.getAnswer().equals(answer.getAnswer())) {
-                 return false; // Một trong những câu trả lời không đúng
-             }
-         }
-         return true; // Tất cả câu trả lời đều đúng
-     }
-     return false; // Người dùng không tồn tại
- }
+        // Cập nhật đáp án mới
+        existingQuestion.setAnswer(updatedQuestion.getNewAnswer());
+        securityQuestionRepository.save(existingQuestion);
+    }
 }

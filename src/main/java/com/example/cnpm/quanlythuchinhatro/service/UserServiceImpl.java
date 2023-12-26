@@ -1,6 +1,10 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
 
+import java.util.List;
+import java.util.Optional;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +14,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.UserLoginRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.UserRequest;
+import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
+import com.example.cnpm.quanlythuchinhatro.model.SecurityQuestion;
 import com.example.cnpm.quanlythuchinhatro.model.User;
+import com.example.cnpm.quanlythuchinhatro.repository.SecurityQuestionRepository;
 import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 
 	@Service
@@ -25,105 +31,98 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	 @Autowired
 	 private PasswordEncoder passwordEncoder;
 	 
-	
-	 @Override
-	 public ResponseEntity<?> registerUser(UserRequest userRequest) {
-	     // Kiểm tra xem username đã tồn tại hay chưa
-	     if (userRepository.findByUsername(userRequest.getUsername()) != null) {
-	         return ResponseEntity.status(401).body("EXISTED_USERNAME");
-	     }
-	
-	     // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
-	     String encodedPassword = passwordEncoder.encode(userRequest.getPassword());
-	
-	     // Tạo đối tượng User từ UserRequest
-	     User user = new User();
-	     user.setName(userRequest.getFullname());
-	     user.setUsername(userRequest.getUsername());
-	     user.setPassword(encodedPassword);
-	
-	     // Lưu người dùng mới vào cơ sở dữ liệu
-	     userRepository.save(user);
-	
-	     return ResponseEntity.ok().build();
-	 }
+	 @Autowired
+	 private SecurityQuestionRepository securityQuestionRepository;
 	 
-	 @Override
-	 public User findByUsername(String username) {
-	        return userRepository.findByUsername(username);
-	    }
 
-	    public String login(String username, String password) {
-	        User user = findByUsername(username);
-
-	        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-	            return "Login successful";
-	        } else if (user == null) {
-	            return "USERNAME_DOESNOT_EXIST";
-	        } else {
-	            return "WRONG_PASSWORD";
+	 public ResponseEntity<String> signUp(UserSignUpRequest userSignUpRequest) {
+	        // Kiểm tra xem username đã tồn tại chưa
+	        if (userRepository.findByUsername(userSignUpRequest.getUsername()).isPresent()) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
 	        }
-	    }
-	 @Override
-	    public void logout(String username) {
+
+	        // Tạo mới người dùng
+	        User user = new User();
+	        user.setName(userSignUpRequest.getFullname());
+	        user.setUsername(userSignUpRequest.getUsername());
+	        user.setPassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
+	        // Các trường khác của người dùng có thể thêm vào tại đây
+
+	        // Lưu vào cơ sở dữ liệu
+	        userRepository.save(user);
+
+	        return ResponseEntity.ok("User registered successfully");
 	    }
 	 
 	 @Override
-	    public User updateUser(String username, UpdateUserRequest updateUserRequest) {
-	        User user = userRepository.findByUsername(username);
+	    public ResponseEntity<?> updateUser(UpdateUserRequest updateUserRequest) {
+	        Optional<User> optionalUser = userRepository.findById(updateUserRequest.getUserId());
 
-	        if (user != null) {
-	            // Cập nhật thông tin người dùng
+	        if (optionalUser.isPresent()) {
+	            User user = optionalUser.get();
 	            user.setName(updateUserRequest.getFullname());
 	            user.setPhoneNumber(updateUserRequest.getPhoneNumber());
 	            user.setBankName(updateUserRequest.getBankName());
 	            user.setBankAccountNumber(updateUserRequest.getBankNumber());
 	            user.setAvatarUrl(updateUserRequest.getAvatarUrl());
 
-	            // Lưu thông tin cập nhật vào cơ sở dữ liệu
 	            userRepository.save(user);
 
-	            return user;
-	        }
-
-	        return null; // Hoặc có thể ném một ngoại lệ để xử lý tình huống người dùng không tồn tại
-	    }
-
-	 @Override
-	    public ResponseEntity<?> changePassword(UserLoginRequest loginRequest, String newPassword) {
-	        User user = userRepository.findByUsername(loginRequest.getUsername());
-
-	        if (user != null && passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-	            // Mật khẩu hiện tại hợp lệ
-	            user.setPassword(passwordEncoder.encode(newPassword)); // Mã hóa mật khẩu mới
-	            userRepository.save(user);
-	            return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
-	        } else {
-	            return new ResponseEntity<>("Invalid current password", HttpStatus.UNAUTHORIZED);
-	        }
-	    }
-	 
-	 @Override
-	    public ResponseEntity<String> resetPassword(String username, String newPassword) {
-	        User user = userRepository.findByUsername(username);
-
-	        if (user != null) {
-	            user.setPassword(passwordEncoder.encode(newPassword));
-	            userRepository.save(user);
-	            return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
+	            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
 	        } else {
 	            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
 	        }
 	    }
 
-	@Override
-	public String addUser(UserRequest userRequest) {
-		User user = new User(
-				userRequest.getFullname(),
-				userRequest.getUsername(),
-				this.passwordEncoder.encode(userRequest.getPassword())
-		);
-		userRepository.save(user);
-		return user.getUsername();
-	}
+	 @Override
+	    public ResponseEntity<?> changePassword(ChangePasswordRequest changePasswordRequest) {
+	        String username = changePasswordRequest.getUsername();
+	        String currentPassword = changePasswordRequest.getCurrentPassword();
+	        String newPassword = changePasswordRequest.getNewPassword();
+
+	        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+	        if (optionalUser.isPresent()) {
+	            User user = optionalUser.get();
+
+	            // Kiểm tra mật khẩu hiện tại
+	            if (passwordEncoder.matches(currentPassword, user.getPassword())) {
+	                // Cập nhật mật khẩu mới
+	                user.setPassword(passwordEncoder.encode(newPassword));
+	                userRepository.save(user);
+
+	                return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+	            } else {
+	                return new ResponseEntity<>("Current password is incorrect", HttpStatus.UNAUTHORIZED);
+	            }
+	        } else {
+	            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+	        }
+	    }
+	 
+	 public ResponseEntity<String> resetPassword(String username, String answer, String newPassword) {
+	        // Tìm kiếm người dùng
+	        Optional<User> optionalUser = userRepository.findByUsername(username);
+	        if (optionalUser.isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+	        }
+
+	        User user = optionalUser.get();
+
+	        // Kiểm tra câu trả lời bảo mật
+	        List<SecurityQuestion> securityQuestions = securityQuestionRepository.findByUserId(user.getId());
+	        boolean isAnswerCorrect = securityQuestions.stream()
+	                .anyMatch(sq -> sq.getAnswer().equals(answer));
+
+	        if (!isAnswerCorrect) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect security answer");
+	        }
+
+	        // Đặt lại mật khẩu và lưu vào cơ sở dữ liệu
+	        user.setPassword(passwordEncoder.encode(newPassword));
+	        userRepository.save(user);
+
+	        return ResponseEntity.ok("Password reset successfully");
+	    }
+
 }
