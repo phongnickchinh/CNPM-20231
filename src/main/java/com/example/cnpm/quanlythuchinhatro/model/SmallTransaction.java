@@ -2,6 +2,8 @@ package com.example.cnpm.quanlythuchinhatro.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
 @Table(name = "SmallTransaction")
@@ -25,11 +27,11 @@ public class SmallTransaction {
     private String itemName;
 
     @Column(name = "transaction_time")
-    private String transactionTime;
+    private String transactionTime; // Format to YYYY-MM-DD
 
   
     @Column(name = "price")
-    private String price;
+    private BigDecimal price;
 
     //note
     @Column(name = "note")
@@ -39,7 +41,7 @@ public class SmallTransaction {
     public SmallTransaction() {
     }
 
-    public SmallTransaction(Integer roomId, Integer userId, String itemName, String transactionTime, String price, String note) {
+    public SmallTransaction(Integer roomId, Integer userId, String itemName, String transactionTime, BigDecimal price, String note) {
         this.roomId = roomId;
         this.userId = userId;
         this.itemName = itemName;

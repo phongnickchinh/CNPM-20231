@@ -22,7 +22,6 @@ public class FeeWithDeadlineServiceImpl implements FeeWithDeadlineService{
 
     @Override
     public void deleteFeeWithDeadline(Integer id) {
-
         feeWithDeadlineRepository.deleteById(id);
     }
 
