@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService{
@@ -43,5 +44,10 @@ public class UserServiceImpl implements UserService{
                     }
                 })
                 .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("USERNAME_DOESNOT_EXIST")); // Username không tồn tại
+    }
+
+    @Override
+    public List<User> getAllById(Integer Id) {
+        return userRepository.getAllById(Id);
     }
 }

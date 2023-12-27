@@ -5,11 +5,9 @@ import com.example.cnpm.quanlythuchinhatro.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,5 +41,9 @@ public class UserController {
         // Ví dụ dưới đây giả định rằng bạn đang xử lý phiên người dùng:
         // request.getSession().invalidate();
         return ResponseEntity.ok("Logout successful");
+    }
+    @GetMapping("/get/{Id}")
+    public List<User> getAllById(@PathVariable Integer Id) {
+        return userService.getAllById(Id);
     }
 }
