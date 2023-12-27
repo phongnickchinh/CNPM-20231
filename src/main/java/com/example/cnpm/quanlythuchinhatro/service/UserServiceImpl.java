@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
+import com.example.cnpm.quanlythuchinhatro.dto.ForgotPasswordRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
 import com.example.cnpm.quanlythuchinhatro.model.SecurityQuestion;
@@ -100,9 +101,9 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	        }
 	    }
 	 
-	 public ResponseEntity<String> resetPassword(String username, String answer, String newPassword) {
-	        // Tìm kiếm người dùng
-	        Optional<User> optionalUser = userRepository.findByUsername(username);
+	 public ResponseEntity<String> forgotPassword(ForgotPasswordRequest request) {
+	        // Tìm kiếm người dùng theo username
+	        Optional<User> optionalUser = userRepository.findByUsername(request.getUsername());
 	        if (optionalUser.isEmpty()) {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	        }
@@ -112,14 +113,14 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	        // Kiểm tra câu trả lời bảo mật
 	        List<SecurityQuestion> securityQuestions = securityQuestionRepository.findByUserId(user.getId());
 	        boolean isAnswerCorrect = securityQuestions.stream()
-	                .anyMatch(sq -> sq.getAnswer().equals(answer));
+	                .anyMatch(sq -> sq.getAnswer().equals(request.getSecurityAnswer()));
 
 	        if (!isAnswerCorrect) {
 	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect security answer");
 	        }
 
 	        // Đặt lại mật khẩu và lưu vào cơ sở dữ liệu
-	        user.setPassword(passwordEncoder.encode(newPassword));
+	        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
 	        userRepository.save(user);
 
 	        return ResponseEntity.ok("Password reset successfully");

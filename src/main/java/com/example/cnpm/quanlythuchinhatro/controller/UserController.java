@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
+import com.example.cnpm.quanlythuchinhatro.dto.ForgotPasswordRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
 import com.example.cnpm.quanlythuchinhatro.model.SecurityQuestion;
@@ -52,11 +53,8 @@ public class UserController {
 	    }
 
 	 	@PostMapping("/forgot-password")
-	    public ResponseEntity<String> forgotPassword(
-	            @RequestParam String username,
-	            @RequestParam String answer,
-	            @RequestParam String newPassword) {
-	        return userService.resetPassword(username, answer, newPassword);
+	    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
+	        return userService.forgotPassword(request);
 	    }
 }
 
