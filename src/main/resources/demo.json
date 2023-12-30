@@ -1,0 +1,5 @@
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6Implbmt5MjMwMyIsInN1YiI6Implbmt5MjMwMyIsImlhdCI6MTcwMzg2NDk0NywiZXhwIjoxNzAzODY2NzQ3fQ.UhkvpGAuDQG2O0daWAoH9WuKywsR6zsotyaPQNPLJnY",
+  "expired_at": 1234567890,
+  "refresh_token": "abc"
+}

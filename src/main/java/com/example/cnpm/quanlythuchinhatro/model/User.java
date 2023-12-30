@@ -1,9 +1,12 @@
 package com.example.cnpm.quanlythuchinhatro.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "User")
 public class User {
     @Id
@@ -29,37 +32,39 @@ public class User {
     @Column(name = "bank_name")
     private String bankName;
 
-    @Column(name = "qr_code_url")
-    private String qrCodeUrl;
-
     @Column(name = "avatar_url")
     private String avatarUrl;
 
-    public User() {
-    }
+    @Column(name = "roles")
+    private String roles;
 
-    // Constructor cho các thuộc tính bắt buộc
-    public User(String username, String password, String name) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-    }
-
-    // Constructor cho tất cả các thuộc tính
-    public User(String username, String password, String name, String phoneNumber, String bankAccountNumber, String bankName, String qrCodeUrl, String avatarUrl) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.bankAccountNumber = bankAccountNumber;
-        this.bankName = bankName;
-        this.qrCodeUrl = qrCodeUrl;
-        this.avatarUrl = avatarUrl;
-    }
-
-    // Constructor cho các thuộc tính bắt buộc và một số thuộc tính mặc định
-    public User(String username, String password, String name, String phoneNumber, String bankAccountNumber) {
-        this(username, password, name, phoneNumber, bankAccountNumber, "DefaultBankName", "DefaultQrCodeUrl", "DefaultAvatarUrl");
-    }
+//    public User() {
+//    }
+//
+//    // Constructor cho các thuộc tính bắt buộc
+//    public User(String username, String password, String name) {
+//        this.username = username;
+//        this.password = password;
+//        this.name = name;
+//    }
+//
+//    // Constructor cho tất cả các thuộc tính
+//
+//    public User(String username, String password, String name, String phoneNumber, String bankAccountNumber, String bankName, String qrCodeUrl, String avatarUrl, String roles) {
+//        this.username = username;
+//        this.password = password;
+//        this.name = name;
+//        this.phoneNumber = phoneNumber;
+//        this.bankAccountNumber = bankAccountNumber;
+//        this.bankName = bankName;
+//        this.qrCodeUrl = qrCodeUrl;
+//        this.avatarUrl = avatarUrl;
+//        this.roles = roles;
+//    }
+//
+//    // Constructor cho các thuộc tính bắt buộc và một số thuộc tính mặc định
+//    public User(String username, String password, String name, String phoneNumber, String bankAccountNumber, String roles) {
+//        this(username, password, name, phoneNumber, bankAccountNumber, "DefaultBankName", "DefaultQrCodeUrl", "DefaultAvatarUrl", "ROLE_USER");
+//    }
 
 }
