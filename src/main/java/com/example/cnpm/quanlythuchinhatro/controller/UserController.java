@@ -80,10 +80,10 @@ public class UserController {
 	    }
 
 	    @GetMapping("/logout")
-	    public ResponseEntity<?> logout(HttpSession session) {
+	    public String logout(HttpSession session) {
 	        // Xóa thông tin người dùng khỏi session khi đăng xuất
-	        session.invalidate();
-	        return ResponseEntity.ok("Logout successful");
+	        session.removeAttribute("loggedInUser");
+	        return "login";
 	    }
 
 	    
@@ -93,6 +93,7 @@ public class UserController {
 	         model.addAttribute("signupRequest", new UserSignUpRequest());
 	         return "signup";
 	     }
+	     
 	     @GetMapping("/current-user")
 	     public ResponseEntity<?> getCurrentUser(HttpSession session) {
 	         Object loggedInUser = session.getAttribute("loggedInUser");
