@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.ForgotPasswordRequest;
+import com.example.cnpm.quanlythuchinhatro.dto.LoginRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
 import com.example.cnpm.quanlythuchinhatro.model.SecurityQuestion;
@@ -28,8 +30,10 @@ import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.service.SecurityQuestionService;
 import com.example.cnpm.quanlythuchinhatro.service.UserSevice;
 
+import jakarta.servlet.http.HttpSession;
+
 @RestController
-@RequestMapping("/")
+@RequestMapping("")
 public class UserController {
 
 	 @Autowired
@@ -38,6 +42,7 @@ public class UserController {
 	 @Autowired
 	 private SecurityQuestionService securityQuestionService;
 	 
+
 	 @PostMapping("/signup")
 	    public ResponseEntity<String> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
 	        return userService.signUp(userSignUpRequest);
@@ -56,5 +61,48 @@ public class UserController {
 	    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
 	        return userService.forgotPassword(request);
 	    }
+	 	 @GetMapping("/login")
+	     public String getLoginPage(Model model) {
+	         model.addAttribute("loginRequest", new LoginRequest());
+	         return "login";
+	     }
+
+	 	@PostMapping("/login")
+	    public ResponseEntity<?> login(@RequestBody LoginRequest userLoginRequest, HttpSession session) {
+	        ResponseEntity<?> response = userService.login(userLoginRequest);
+	        
+	        // Nếu đăng nhập thành công, lưu thông tin người dùng vào session
+	        if (response.getStatusCode().equals(HttpStatus.OK)) {
+	            session.setAttribute("loggedInUser", userLoginRequest.getUsername());
+	        }
+	        
+	        return response;
+	    }
+
+	    @GetMapping("/logout")
+	    public ResponseEntity<?> logout(HttpSession session) {
+	        // Xóa thông tin người dùng khỏi session khi đăng xuất
+	        session.invalidate();
+	        return ResponseEntity.ok("Logout successful");
+	    }
+
+	    
+	     
+	     @GetMapping("/signup")
+	     public String getSignupPage(Model model) {
+	         model.addAttribute("signupRequest", new UserSignUpRequest());
+	         return "signup";
+	     }
+	     @GetMapping("/current-user")
+	     public ResponseEntity<?> getCurrentUser(HttpSession session) {
+	         Object loggedInUser = session.getAttribute("loggedInUser");
+	         if (loggedInUser != null) {
+	             return ResponseEntity.ok("Current user: " + loggedInUser.toString());
+	         } else {
+	             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
+	         }
+	     }
+
 }
+
 

@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.ForgotPasswordRequest;
+import com.example.cnpm.quanlythuchinhatro.dto.LoginRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
 import com.example.cnpm.quanlythuchinhatro.model.User;
@@ -22,4 +23,10 @@ public interface UserSevice {
 	
 	ResponseEntity<String> forgotPassword(ForgotPasswordRequest request);
 
+	Optional<User> findUserByUsername(String username);
+	
+	ResponseEntity<?> login(LoginRequest userLoginRequest);
+
+
+	
 }

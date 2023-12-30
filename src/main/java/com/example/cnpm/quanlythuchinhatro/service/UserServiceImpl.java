@@ -10,12 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.ForgotPasswordRequest;
+import com.example.cnpm.quanlythuchinhatro.dto.LoginRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
 import com.example.cnpm.quanlythuchinhatro.model.SecurityQuestion;
@@ -126,4 +128,24 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	        return ResponseEntity.ok("Password reset successfully");
 	    }
 
+	public Optional<User> findUserByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
+	
+	public ResponseEntity<?> login(LoginRequest userLoginRequest) {
+        // Tìm kiếm người dùng theo username
+        Optional<User> optionalUser = userRepository.findByUsername(userLoginRequest.getUsername());
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+
+        User user = optionalUser.get();
+
+        // Kiểm tra mật khẩu
+        if (passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+    }
 }
