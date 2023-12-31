@@ -27,6 +27,6 @@ public interface UserSevice {
 	
 	ResponseEntity<?> login(LoginRequest userLoginRequest);
 
-
+	UpdateUserRequest getUserInfo(String username);
 	
 }

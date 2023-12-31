@@ -59,7 +59,7 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	 
 	 @Override
 	    public ResponseEntity<?> updateUser(UpdateUserRequest updateUserRequest) {
-	        Optional<User> optionalUser = userRepository.findById(updateUserRequest.getUserId());
+	        Optional<User> optionalUser = userRepository.findByUsername(updateUserRequest.getUsername());
 
 	        if (optionalUser.isPresent()) {
 	            User user = optionalUser.get();
@@ -146,6 +146,22 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
             return ResponseEntity.ok("Login successful");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+        }
+    }
+	
+	public UpdateUserRequest getUserInfo(String username) {
+        // Lấy thông tin người dùng từ repository và chuyển đổi thành đối tượng UserInfo
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            UpdateUserRequest userInfo = new UpdateUserRequest();
+            userInfo.setUsername(user.getUsername());
+            userInfo.setFullname(user.getName());
+            // Các trường thông tin khác
+            return userInfo;
+        } else {
+            // Xử lý trường hợp không tìm thấy người dùng
+            return null;
         }
     }
 }

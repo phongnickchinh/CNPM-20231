@@ -61,11 +61,7 @@ public class UserController {
 	    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request) {
 	        return userService.forgotPassword(request);
 	    }
-	 	 @GetMapping("/login")
-	     public String getLoginPage(Model model) {
-	         model.addAttribute("loginRequest", new LoginRequest());
-	         return "login";
-	     }
+	 	 
 
 	 	@PostMapping("/login")
 	    public ResponseEntity<?> login(@RequestBody LoginRequest userLoginRequest, HttpSession session) {
@@ -103,7 +99,18 @@ public class UserController {
 	             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
 	         }
 	     }
-
+	     @GetMapping("/info")
+	     public ResponseEntity<?> getUserInfo(HttpSession session) {
+	         // Kiểm tra xem người dùng đã đăng nhập hay chưa
+	         Object loggedInUser = session.getAttribute("loggedInUser");
+	         if (loggedInUser != null) {
+	             // Lấy thông tin người dùng từ service hoặc repository
+	             UpdateUserRequest userInfo = userService.getUserInfo(loggedInUser.toString());
+	             return ResponseEntity.ok(userInfo);
+	         } else {
+	             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
+	         }
+	     }
 }
 
 
