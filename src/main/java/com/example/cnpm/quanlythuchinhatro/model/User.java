@@ -31,37 +31,7 @@ public class User {
     @Column(name = "bank_name")
     private String bankName;
 
-    @Column(name = "qr_code_url")
-    private String qrCodeUrl;
-
     @Column(name = "avatar_url")
     private String avatarUrl;
 
-    public User() {
-    }
-
-    // Constructor cho các thuộc tính bắt buộc
-    public User(String username, String password, String name) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-    }
-
-    // Constructor cho tất cả các thuộc tính
-    public User(String username, String password, String name, String phoneNumber, String bankAccountNumber, String bankName, String qrCodeUrl, String avatarUrl) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.bankAccountNumber = bankAccountNumber;
-        this.bankName = bankName;
-        this.qrCodeUrl = qrCodeUrl;
-        this.avatarUrl = avatarUrl;
-    }
-
-    // Constructor cho các thuộc tính bắt buộc và một số thuộc tính mặc định
-    public User(String username, String password, String name, String phoneNumber, String bankAccountNumber) {
-        this(username, password, name, phoneNumber, bankAccountNumber, "DefaultBankName", "DefaultQrCodeUrl", "DefaultAvatarUrl");
-    }
-   
 }

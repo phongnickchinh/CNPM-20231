@@ -20,20 +20,10 @@ public class Room {
     @Column(name = "number_of_member")
     private Integer numberOfMember;
 
-    @Column(name = "user_id")
-    private Integer user;
+    @Column(name = "admin_id")
+    private Integer admin_id;
 
+    @Column(name = "address")
+    private String address;
 
-
-    //constructor
-    public Room() {
-    }
-    public Room(String roomName, Integer numberOfMember, Integer user) {
-        this.roomName = roomName;
-        this.numberOfMember = numberOfMember;
-        this.user = user;
-    }
-
-
-    
 }
