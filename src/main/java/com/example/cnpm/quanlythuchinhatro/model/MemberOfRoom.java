@@ -25,7 +25,9 @@ public class MemberOfRoom {
     private Integer status;
 
     //constructor
-    MemberOfRoom() {}
+    MemberOfRoom() {
+        
+    }
     MemberOfRoom(Integer roomId, Integer userId, Integer status) {
         this.roomId = roomId;
         this.userId = userId;
