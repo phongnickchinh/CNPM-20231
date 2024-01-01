@@ -39,34 +39,38 @@ public class UserController {
 		 }
 		 return response;
 	    }
-	 @GetMapping("/logout")
-	 public String logout(HttpSession session) {
-		 // Xóa thông tin người dùng khỏi session khi đăng xuất
-		 session.removeAttribute("loggedInUser");
-		 return "login";
-	 }
+	@GetMapping("/logout")
+	public ResponseEntity<String> logout(HttpSession session) {
+		session.removeAttribute("loggedInUser");
+		return new ResponseEntity<>("Đăng xuất thành công", HttpStatus.OK);
+	}
 
-	 @GetMapping("/current-user")
-	 public ResponseEntity<?> getCurrentUser(HttpSession session) {
-		 Object loggedInUser = session.getAttribute("loggedInUser");
-		 if (loggedInUser != null) {
-			 return ResponseEntity.ok("Current user: " + loggedInUser.toString());
-		 } else {
-			 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
-		 }
-	 }
-	 @GetMapping("/info")
-	 public ResponseEntity<?> getUserInfo(HttpSession session) {
-		 // Kiểm tra xem người dùng đã đăng nhập hay chưa
-		 Object loggedInUser = session.getAttribute("loggedInUser");
-		 if (loggedInUser != null) {
-			 // Lấy thông tin người dùng từ service hoặc repository
-			 UpdateUserRequest userInfo = userService.getUserInfo(loggedInUser.toString());
-			 return ResponseEntity.ok(userInfo);
-		 } else {
-			 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
-		 }
-	 }
+	@GetMapping("/current-user")
+	public ResponseEntity<String> getCurrentUser(HttpSession session) {
+		Object loggedInUser = session.getAttribute("loggedInUser");
+
+		if (loggedInUser != null) {
+			String userInfo = "Current user: " + loggedInUser.toString();
+			return ResponseEntity.ok(userInfo);
+		} else {
+			String unauthorizedMessage = "No user is logged in";
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(unauthorizedMessage);
+		}
+	}
+	@GetMapping("/info")
+	public ResponseEntity<?> getUserInfo(HttpSession session) {
+		Object loggedInUser = session.getAttribute("loggedInUser");
+		if (loggedInUser != null) {
+			UpdateUserRequest userInfo = userService.getUserInfo(loggedInUser.toString());
+			if (userInfo != null) {
+				return ResponseEntity.ok(userInfo);
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve user information");
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
+		}
+	}
 
 }
 
