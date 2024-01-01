@@ -35,8 +35,10 @@ public class UserController {
 	        
 		 // Nếu đăng nhập thành công, lưu thông tin người dùng vào session
 		 if (response.getStatusCode().equals(HttpStatus.OK)) {
+			 System.out.println("SUCCEEDED: " + session.getId());
 			 session.setAttribute("loggedInUser", userLoginRequest.getUsername());
 		 }
+		 System.out.println("DONE");
 		 return response;
 	    }
 	 @GetMapping("/logout")
