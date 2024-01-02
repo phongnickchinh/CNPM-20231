@@ -47,7 +47,7 @@ public class SecurityQuestionService {
 
 	                return ResponseEntity.ok("Security question added successfully");
 	            } else {
-	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_PASSWORD");
 	            }
 	        } else {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
