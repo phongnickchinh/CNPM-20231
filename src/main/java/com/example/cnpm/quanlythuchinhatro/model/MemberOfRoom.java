@@ -5,7 +5,7 @@ import lombok.Data;
 //tạo một thựcthể liên kết giữa room và user
 @Entity
 @Data
-@Table(name = "MemberOfRoom")
+@Table(name = "member_of_room")
 public class MemberOfRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,14 +23,4 @@ public class MemberOfRoom {
     //status
     @Column(name = "status")
     private Integer status;
-
-    //constructor
-    MemberOfRoom() {
-        
-    }
-    MemberOfRoom(Integer roomId, Integer userId, Integer status) {
-        this.roomId = roomId;
-        this.userId = userId;
-        this.status = status;
-    }
 }
