@@ -1,4 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.model;
+import java.sql.Date;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,14 +17,17 @@ public class JoinRoomRequest {
     private Integer userId;
     @Column(name="room_id")
     private Integer roomId;
+    @Column(name="request_date")
+    private Date requestDate;
     @Column(name="status")
     private Integer status;
 
     public JoinRoomRequest() {
     }
-    public JoinRoomRequest(Integer userId, Integer roomId, Integer status) {
+    public JoinRoomRequest(Integer userId, Integer roomId, Date requestDate, Integer status) {
         this.userId = userId;
         this.roomId = roomId;
+        this.requestDate = requestDate;
         this.status = status;
     }
 
