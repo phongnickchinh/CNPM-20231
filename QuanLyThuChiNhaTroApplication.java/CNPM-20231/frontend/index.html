@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý thu chi</title>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script> -->
+    <link rel="stylesheet" href="style.css">
+    <script src="./resources/jquery.min.js"></script>
+    <script>
+        let api = null
+    </script>
+</head>
+
+<body>
+    <nav id="navbar">
+        <div id="nav-left-side"></div>
+        <div id="nav-right-side">
+            <input type="text" placeholder="Message">
+            <img src="./resources/user.png" alt="" id="user-icon">
+        </div>
+    </nav>
+
+    <div id="main-container">
+        <script>
+            function resizeMainContainer() {
+                $('#main-container').outerHeight($(window).height() - $('#navbar').outerHeight())
+            }
+            resizeMainContainer()
+            $(window).resize(resizeMainContainer)
+        </script>
+        <div id="left-side-bar">
+            <div class="item active" tab-id="input-transaction">
+                <span>Nhập liệu chi tiêu</span>
+            </div>
+            <div class="item" tab-id="fixed-costs">
+                <span>Chi phí cố định</span>
+            </div>
+            <div class="item" tab-id="room-members">
+                <span>Thành viên</span>
+            </div>
+            <div class="item" tab-id="request-payments">
+                <span>Yêu cầu đóng phí</span>
+            </div>
+
+            <script>
+                $('#left-side-bar .item').click(function () {
+                    let item = $(this)
+                    if (!item.hasClass('active')) {
+                        item.siblings('.item').removeClass('active')
+                        item.addClass('active')
+                        $('#main-container > .content').each(function () {
+                            $(this).toggle($(this).attr('id') == item.attr('tab-id'))
+                        })
+                    }
+                })
+            </script>
+        </div>
+
+        <!-- Nhập xuất giao dịch -->
+        <div class="content" id="input-transaction">
+            <div class="left">
+                <form action="">
+                    <input type="text" placeholder="@productname">
+                    <input type="text" placeholder="@price">
+                    <input type="text" placeholder="@dd/mm/yy">
+
+                    <button>Submit</button>
+                </form>
+
+                <div id="money-spent">
+                    <div class="line">
+                        <span class="title">You spent:</span>
+                        <span class="value value-green">230k</span>
+                    </div>
+                    <div class="line">
+                        <span class="title">Room average:</span>
+                        <span class="value">100k</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <div id="list-transactions">
+                    <div class="time-control">
+                        <img src="./resources/prev.png" alt="" class="prev-month">
+                        <div class="time">November</div>
+                        <img src="./resources/next.png" alt="" class="next-month">
+                    </div>
+                    <select class="user-selection">
+                        <option value="">Mọi người</option>
+                        <option value="">Hùng đẹp trai</option>
+                    </select>
+
+                    <div id="transactions">
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                        <div class="item">
+                            <div class="info">
+                                <div class="product-name">Kem đánh răng</div>
+                                <div class="user-bought">Nguyễn Văn Hùng</div>
+                            </div>
+
+                            <div class="cost">49k</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chi phí cố định -->
+        <div class="content" id="fixed-costs" style="display: none;">
+            <div class="left">
+                <div id="list-fixed-costs">
+                    <div class="group-top">
+                        <div class="header">
+                            <div class="header-col">Tên chi phí</div>
+                            <div class="header-col">Số lượng</div>
+                        </div>
+    
+                        <div class="note">
+                            <div class="title">Trạng thái:</div>
+                            <div class="item">
+                                <div class="color" style="background-color: #1BDD2E;"></div>
+                                <div class="name">Đã đóng</div>
+                            </div>
+                            <div class="item">
+                                <div class="color" style="background-color: #D80032;"></div>
+                                <div class="name">Chưa đóng</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fixed-costs">
+                        <div class="item">
+                            <div class="title">Chi phí 1</div>
+                            <div class="value">10k</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="title">Chi phí 2</div>
+                            <div class="value done">15k</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="title">Chi phí 3</div>
+                            <div class="value done">25k</div>
+                        </div>
+                    </div>
+
+                    <div class="total">
+                        <div class="title">Tổng</div>
+                        <div class="value">40/50</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <div id="fixed-costs-general-info">
+                    <div class="header">Tổng</div>
+                    <div class="item">
+                        <div class="title">Tiền phòng:</div>
+                        <div class="value">1700k</div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Tiền điện:</div>
+                        <div class="value">560k</div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Tiền nước:</div>
+                        <div class="value">110k</div>
+                    </div>
+                    <div class="item total">
+                        <div class="title">Tổng của tổng</div>
+                        <div class="value">2370k</div>
+                    </div>
+                </div>
+
+                <div id="admin-bank-info">
+                    <div class="header">Thông tin ngân hàng</div>
+                    <div class="info">STK: 0384742590</div>
+                    <div class="info">Ngân hàng: BIDV</div>
+                    <div class="info">Pham Van Phong</div>
+                    <img src="./resources/general.jpg" alt="" class="qr-code">
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách thành viên phòng -->
+        <div class="content" id="room-members" style="display: none;">
+            <div class="list-members">
+                <div class="header">
+                    Danh sách thành viên
+                </div>
+
+                <div class="item">
+                    <img src="./resources/user.png" alt="">
+                    <div class="name">Name</div>
+                    <div class="phone">Phone</div>
+                    <div class="bank">
+                        Bank
+                        <div class="more-info">
+                            Chi tiết
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="item">
+                    <img src="./resources/user.png" alt="">
+                    <div class="name">Name</div>
+                    <div class="phone">Phone</div>
+                    <div class="bank">
+                        Bank
+                        <div class="more-info">
+                            Chi tiết
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="item">
+                    <img src="./resources/user.png" alt="">
+                    <div class="name">Name</div>
+                    <div class="phone">Phone</div>
+                    <div class="bank">
+                        Bank
+                        <div class="more-info">
+                            Chi tiết
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yêu cầu đóng phí -->
+        <div class="content" id="request-payments" style="display: none;">
+            <div id="list-request-payments">
+                <div class="list">
+                    <div class="headers">
+                        <div class="header">
+                            <div class="title">Tên chi phí</div>
+                            <input type="text">
+                        </div>
+                        <div class="header">
+                            <div class="title">Số tiền</div>
+                            <input type="text">
+                        </div>
+                        <div class="header">
+                            <div class="title">Thời hạn</div>
+                            <input type="text">
+                        </div>
+                    </div>
+
+                    <div class="items">
+                        <div class="row">
+                            <div class="field"><div class="wrap">1. Tiền điện</div></div>
+                            <div class="field"><div class="wrap">1300k</div></div>
+                            <div class="field"><div class="wrap">7/11/2023</div></div>
+                        </div>
+                        <div class="row">
+                            <div class="field"><div class="wrap">2. Tiền wifi</div></div>
+                            <div class="field"><div class="wrap">260k</div></div>
+                            <div class="field"><div class="wrap">29/11/2023</div></div>
+                        </div>
+                        <div class="row">
+                            <div class="field"><div class="wrap">3. Tiền phòng</div></div>
+                            <div class="field"><div class="wrap">15000k</div></div>
+                            <div class="field"><div class="wrap">15/11/2023</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="operations">
+                    <div class="op">
+                        <img src="./resources/add.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./main.js"></script>
+</body>
+
+</html>
