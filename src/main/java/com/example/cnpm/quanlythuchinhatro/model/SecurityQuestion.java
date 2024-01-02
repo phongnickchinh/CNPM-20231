@@ -38,4 +38,7 @@ public class SecurityQuestion {
     @ManyToOne
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
+
+	 
+
 }
