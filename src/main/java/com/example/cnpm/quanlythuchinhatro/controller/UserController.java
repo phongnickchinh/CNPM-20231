@@ -45,7 +45,7 @@ public class UserController {
 
 	        return responseEntity;
 	    }	 
-	@GetMapping("/logout")
+	@GetMapping("/logout2")
 		public ResponseEntity<String> logout(HttpSession session) {
 			session.removeAttribute("loggedInUser");
 			return new ResponseEntity<>("Đăng xuất thành công", HttpStatus.OK);
@@ -63,7 +63,7 @@ public class UserController {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(unauthorizedMessage);
 			}
 		}
-	@PutMapping("/info")
+	@GetMapping("/info")
 	public ResponseEntity<?> getUserInfo(HttpSession session) {
 		Object loggedInUser = session.getAttribute("loggedInUser");
 		if (loggedInUser != null) {
