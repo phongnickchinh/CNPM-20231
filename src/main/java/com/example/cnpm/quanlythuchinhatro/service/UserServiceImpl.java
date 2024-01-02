@@ -31,9 +31,9 @@ public class UserServiceImpl implements UserService {
 
 	 public ResponseEntity<String> signUp(UserSignUpRequest userSignUpRequest) {
 		 if (userRepository.findByUsername(userSignUpRequest.getUsername()).isPresent()) {
-			 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
+			 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("EXISTED_USERNAME");
 		 }
-		 User user = new User();
+		 User user = new User(); 	
 		 user.setName(userSignUpRequest.getFullname());
 		 user.setUsername(userSignUpRequest.getUsername());
 		 user.setPassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
