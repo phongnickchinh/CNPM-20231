@@ -22,11 +22,11 @@ public class MemberOfRoom {
 
     //join_date
     @Column(name = "join_date")
-    private Date joinDate
+    private Date joinDate;
 
     //out_date
     @Column(name = "out_date")
-    private Date outDate
+    private Date outDate;
 
     //status
     @Column(name = "status")

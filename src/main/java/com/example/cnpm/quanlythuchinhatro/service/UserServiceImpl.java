@@ -1,19 +1,17 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
 
+import java.util.Map;
 import java.util.Optional;
 
 
+import com.example.cnpm.quanlythuchinhatro.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.LoginRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.repository.SecurityQuestionRepository;
 import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
@@ -50,7 +48,7 @@ public class UserServiceImpl implements UserService {
 	            // Kiểm tra mật khẩu
 	            if (passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
 	                // Đăng nhập thành công
-	                return ResponseEntity.ok("Login successful");
+	                return ResponseEntity.ok(Map.of("message", "Login successfully"));
 	            } else {
 	                // Sai mật khẩu
 	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_PASSWORD");
@@ -81,11 +79,22 @@ public class UserServiceImpl implements UserService {
 			}
 		}
 
-	@Override
-	public User updateInfo(String username, User user) {
-		 user.setId(userRepository.convertUsernameToUserId(username));
-		 userRepository.save(user);
-		 return user;
+	public User updateInfo(String username, UserDTO userDTO) {
+
+		Optional<User> userDB = userRepository.findByUsername(username);
+
+		if(userDB.isPresent()) {
+			User user = userDB.get();
+			if(userDTO.getPhoneNumber() != null ) {user.setPhoneNumber(userDTO.getPhoneNumber());}
+			if(userDTO.getAvatarUrl() != null ) {user.setAvatarUrl(userDTO.getAvatarUrl());}
+			if(userDTO.getBankName() != null ) {user.setBankName(userDTO.getBankName());}
+			if(userDTO.getBankAccountNumber() != null ) {user.setBankAccountNumber(userDTO.getBankAccountNumber());}
+
+			userRepository.save(user);
+			return user;
+		} else {
+			return null;
+		}
 	}
 	
 	 @Override
