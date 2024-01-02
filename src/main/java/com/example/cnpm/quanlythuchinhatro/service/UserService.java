@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 
+import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.LoginRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
@@ -16,5 +17,10 @@ public interface UserService {
 	ResponseEntity<?> login(LoginRequest userLoginRequest);
 
 	UpdateUserRequest getUserInfo(String username);
+	
 	User updateInfo(String username, User user);
+
+	ResponseEntity<?> changePassword(String username, ChangePasswordRequest changePasswordRequest);
+
+	
 }
