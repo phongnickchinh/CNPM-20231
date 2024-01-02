@@ -47,14 +47,32 @@ public class UserController {
 	    public ResponseEntity<String> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
 	        return userService.signUp(userSignUpRequest);
 	    }
-	 	 @PutMapping("/update")
-	    public ResponseEntity<?> updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
-	        return userService.updateUser(updateUserRequest);
+	 @PutMapping("/update")
+	    public ResponseEntity<?> updateUserProfile(@RequestBody UpdateUserRequest updateUserRequest, HttpSession session) {
+	        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+	        Object loggedInUser = session.getAttribute("loggedInUser");
+	        if (loggedInUser != null) {
+	            // Gán tên đăng nhập từ session vào UpdateUserRequest
+	            updateUserRequest.setUsername(loggedInUser.toString());
+	            
+	            // Gọi phương thức updateUser từ UserService
+	            return userService.updateUser(updateUserRequest);
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
+	        }
 	    }
 	    
-	 	@PutMapping("/change-password")
-	    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
-	        return userService.changePassword(changePasswordRequest);
+	 @PostMapping("/change-password")
+	    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, HttpSession session) {
+	        // Kiểm tra xem người dùng đã đăng nhập hay chưa
+	        Object loggedInUser = session.getAttribute("loggedInUser");
+	        if (loggedInUser != null) {
+	            // Thực hiện thay đổi mật khẩu
+	            ResponseEntity<?> responseEntity = userService.changePassword(loggedInUser.toString(), changePasswordRequest);
+	            return responseEntity;
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
+	        }
 	    }
 
 	 	@PostMapping("/forgot-password")

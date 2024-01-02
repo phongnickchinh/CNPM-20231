@@ -58,7 +58,7 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	    }
 	 
 	 @Override
-	    public ResponseEntity<?> updateUser(UpdateUserRequest updateUserRequest) {
+	 public ResponseEntity<?> updateUser(UpdateUserRequest updateUserRequest) {
 	        Optional<User> optionalUser = userRepository.findByUsername(updateUserRequest.getUsername());
 
 	        if (optionalUser.isPresent()) {
@@ -71,35 +71,31 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 
 	            userRepository.save(user);
 
-	            return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+	            return ResponseEntity.ok("User updated successfully");
 	        } else {
-	            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	        }
 	    }
 
 	 @Override
-	    public ResponseEntity<?> changePassword(ChangePasswordRequest changePasswordRequest) {
-	        String username = changePasswordRequest.getUsername();
-	        String currentPassword = changePasswordRequest.getCurrentPassword();
-	        String newPassword = changePasswordRequest.getNewPassword();
-
+	 public ResponseEntity<?> changePassword(String username, ChangePasswordRequest changePasswordRequest) {
+	        // Lấy thông tin người dùng từ repository
 	        Optional<User> optionalUser = userRepository.findByUsername(username);
-
 	        if (optionalUser.isPresent()) {
 	            User user = optionalUser.get();
-
-	            // Kiểm tra mật khẩu hiện tại
-	            if (passwordEncoder.matches(currentPassword, user.getPassword())) {
+	            // Kiểm tra mật khẩu cũ
+	            if (passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())) {
 	                // Cập nhật mật khẩu mới
-	                user.setPassword(passwordEncoder.encode(newPassword));
+	                user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
 	                userRepository.save(user);
-
-	                return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
+	                return ResponseEntity.ok("Password changed successfully");
 	            } else {
-	                return new ResponseEntity<>("Current password is incorrect", HttpStatus.UNAUTHORIZED);
+	                // Trả về lỗi nếu mật khẩu cũ không đúng
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect old password");
 	            }
 	        } else {
-	            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+	            // Trả về lỗi nếu không tìm thấy người dùng
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
 	        }
 	    }
 	 
@@ -157,6 +153,11 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
             UpdateUserRequest userInfo = new UpdateUserRequest();
             userInfo.setUsername(user.getUsername());
             userInfo.setFullname(user.getName());
+            userInfo.setPhoneNumber(user.getPhoneNumber());
+            userInfo.setBankName(user.getBankName());
+            userInfo.setBankNumber(user.getBankAccountNumber());
+            userInfo.setAvatarUrl(user.getAvatarUrl());
+
             // Các trường thông tin khác
             return userInfo;
         } else {

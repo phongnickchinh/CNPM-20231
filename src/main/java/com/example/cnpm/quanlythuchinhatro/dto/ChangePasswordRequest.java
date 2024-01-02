@@ -1,20 +1,21 @@
 package com.example.cnpm.quanlythuchinhatro.dto;
 
 public class ChangePasswordRequest {
-    private String username;
-    private String currentPassword;
+	private String oldPassword;
     private String newPassword;
-	public String getUsername() {
-		return username;
+	public ChangePasswordRequest() {
+		super();
 	}
-	public void setUsername(String username) {
-		this.username = username;
+	public ChangePasswordRequest(String oldPassword, String newPassword) {
+		super();
+		this.oldPassword = oldPassword;
+		this.newPassword = newPassword;
 	}
-	public String getCurrentPassword() {
-		return currentPassword;
+	public String getOldPassword() {
+		return oldPassword;
 	}
-	public void setCurrentPassword(String currentPassword) {
-		this.currentPassword = currentPassword;
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
 	}
 	public String getNewPassword() {
 		return newPassword;
@@ -22,11 +23,4 @@ public class ChangePasswordRequest {
 	public void setNewPassword(String newPassword) {
 		this.newPassword = newPassword;
 	}
-	public ChangePasswordRequest(String username, String currentPassword, String newPassword) {
-		this.username = username;
-		this.currentPassword = currentPassword;
-		this.newPassword = newPassword;
-	}
-    
-    // Getters, setters
 }

@@ -19,7 +19,7 @@ public interface UserSevice {
 	
 	ResponseEntity<?> updateUser(UpdateUserRequest updateUserRequest);
 	
-	ResponseEntity<?> changePassword(ChangePasswordRequest changePasswordRequest);
+	ResponseEntity<?> changePassword(String username, ChangePasswordRequest changePasswordRequest);
 	
 	ResponseEntity<String> forgotPassword(ForgotPasswordRequest request);
 
