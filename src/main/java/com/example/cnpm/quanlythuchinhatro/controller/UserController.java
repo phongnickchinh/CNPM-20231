@@ -18,7 +18,7 @@ import com.example.cnpm.quanlythuchinhatro.service.UserService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("")
 public class UserController {
 
 	 @Autowired
