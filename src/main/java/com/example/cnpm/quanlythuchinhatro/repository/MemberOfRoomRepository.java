@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Integer> {
-    //lấy thông tin user nếu user có trong phòng tại bảng member_of_room
     @Query("SELECT u.id AS id, u.name AS fullName, u.phoneNumber AS phoneNumber, u.bankName AS bankName, u.bankAccountNumber AS bankNumber, u.avatarUrl AS avatarUrl FROM MemberOfRoom mr JOIN User u ON mr.userId = u.id WHERE mr.roomId =:roomId")
     List<Object[]> getAllMemberOfRoom(Integer roomId);
 }

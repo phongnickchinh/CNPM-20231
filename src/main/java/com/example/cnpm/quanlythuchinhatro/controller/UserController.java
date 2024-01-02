@@ -1,5 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.controller;
 
+import com.example.cnpm.quanlythuchinhatro.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import com.example.cnpm.quanlythuchinhatro.service.UserService;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("")
+@RequestMapping("/user")
 public class UserController {
 
 	 @Autowired
@@ -66,6 +67,20 @@ public class UserController {
 				return ResponseEntity.ok(userInfo);
 			} else {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve user information");
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
+		}
+	}
+	@GetMapping("/update")
+	public ResponseEntity<?> updateInfo(HttpSession session, @RequestBody User user) {
+		 Object loggedInUser = session.getAttribute("loggedInUser");
+		if (loggedInUser != null) {
+			User userInfo = userService.updateInfo(loggedInUser.toString(), user);
+			if (userInfo != null) {
+				return ResponseEntity.ok(userInfo);
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user information");
 			}
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");

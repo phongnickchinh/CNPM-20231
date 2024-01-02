@@ -17,9 +17,8 @@ import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.repository.SecurityQuestionRepository;
 import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 
-	@Service
-	public class UserServiceImpl implements UserService {
-	
+@Service
+public class UserServiceImpl implements UserService {
 	 @Autowired
 	 private UserRepository userRepository;
 	
@@ -28,29 +27,19 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 	 
 	 @Autowired
 	 private SecurityQuestionRepository securityQuestionRepository;
-	 
 
 	 public ResponseEntity<String> signUp(UserSignUpRequest userSignUpRequest) {
-		 // Kiểm tra xem username đã tồn tại chưa
 		 if (userRepository.findByUsername(userSignUpRequest.getUsername()).isPresent()) {
 			 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
 		 }
-
-		 // Tạo mới người dùng
 		 User user = new User();
 		 user.setName(userSignUpRequest.getFullname());
 		 user.setUsername(userSignUpRequest.getUsername());
 		 user.setPassword(passwordEncoder.encode(userSignUpRequest.getPassword()));
-		 // Các trường khác của người dùng có thể thêm vào tại đây
-		 // Lưu vào cơ sở dữ liệu
 		 userRepository.save(user);
 
 		 return ResponseEntity.ok("User registered successfully");
 	 }
-public Optional<User> findUserByUsername(String username) {
-		return userRepository.findByUsername(username);
-	}
-	
 public ResponseEntity<?> login(LoginRequest userLoginRequest) {
 	// Tìm kiếm người dùng theo username
 	Optional<User> optionalUser = userRepository.findByUsername(userLoginRequest.getUsername());
@@ -88,4 +77,10 @@ public ResponseEntity<?> login(LoginRequest userLoginRequest) {
 			}
 		}
 
+	@Override
+	public User updateInfo(String username, User user) {
+		 user.setId(userRepository.convertUsernameToUserId(username));
+		 userRepository.save(user);
+		 return user;
+	}
 }

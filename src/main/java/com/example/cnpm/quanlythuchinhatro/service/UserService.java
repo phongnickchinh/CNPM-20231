@@ -13,10 +13,8 @@ public interface UserService {
 	
 	ResponseEntity<String> signUp(UserSignUpRequest userSignUpRequest);
 
-	Optional<User> findUserByUsername(String username);
-
 	ResponseEntity<?> login(LoginRequest userLoginRequest);
 
 	UpdateUserRequest getUserInfo(String username);
-	
+	User updateInfo(String username, User user);
 }
