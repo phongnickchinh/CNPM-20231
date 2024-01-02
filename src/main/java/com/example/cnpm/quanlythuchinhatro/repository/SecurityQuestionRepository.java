@@ -16,4 +16,5 @@ public interface SecurityQuestionRepository extends JpaRepository<SecurityQuesti
 	 void deleteByUserId(Integer userId);
 
 	 Optional<SecurityQuestion> findByUserIdAndQuestion(Integer userId, String question);
+	 
 }

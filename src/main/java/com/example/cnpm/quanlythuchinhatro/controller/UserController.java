@@ -63,7 +63,7 @@ public class UserController {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(unauthorizedMessage);
 			}
 		}
-	@GetMapping("/info")
+	@PutMapping("/info")
 	public ResponseEntity<?> getUserInfo(HttpSession session) {
 		Object loggedInUser = session.getAttribute("loggedInUser");
 		if (loggedInUser != null) {
