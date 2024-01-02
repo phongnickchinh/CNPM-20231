@@ -1,11 +1,11 @@
 package com.example.cnpm.quanlythuchinhatro.model;
 import jakarta.persistence.*;
 import lombok.Data;
-
+import java.sql.Date;
 //tạo một thựcthể liên kết giữa room và user
 @Entity
 @Data
-@Table(name = "MemberOfRoom")
+@Table(name = "member_of_room")
 public class MemberOfRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,17 +20,15 @@ public class MemberOfRoom {
     @Column(name = "user_id")
     private Integer userId;
 
+    //join_date
+    @Column(name = "join_date")
+    private Date joinDate
+
+    //out_date
+    @Column(name = "out_date")
+    private Date outDate
+
     //status
     @Column(name = "status")
     private Integer status;
-
-    //constructor
-    MemberOfRoom() {
-        
-    }
-    MemberOfRoom(Integer roomId, Integer userId, Integer status) {
-        this.roomId = roomId;
-        this.userId = userId;
-        this.status = status;
-    }
 }

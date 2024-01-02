@@ -46,7 +46,7 @@ public class SmallTransactionController {
             @PathVariable Integer roomId,
             @PathVariable Integer year,
             @PathVariable Integer month) {
-        return getTransactionsByRoomId(roomId, year, month, null);
+        return ResponseEntity.ok(getTransactionsByRoomId(roomId, year, month, null).getBody());
     }
     @GetMapping("/getStatusMoney/{roomId}/{userId}")
     public ResponseEntity<StatusSmallTransactionInRoomDTO> getStatusMoney(
