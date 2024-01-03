@@ -44,7 +44,7 @@ public class UserController {
 
 	        return responseEntity;
 	 }
-	@GetMapping("/logout")
+	@GetMapping("/logout2")
 		public ResponseEntity<String> logout(HttpSession session) {
 			session.removeAttribute("loggedInUser");
 			return new ResponseEntity<>("Đăng xuất thành công", HttpStatus.OK);
@@ -80,7 +80,7 @@ public class UserController {
 	public ResponseEntity<?> updateInfo(HttpSession session, @RequestBody UserDTO userDTO) {
 		 Object loggedInUser = session.getAttribute("loggedInUser");
 		if (loggedInUser != null) {
-			User userInfo = userService.updateInfo(loggedInUser.toString(), userDTO);
+			ResponseEntity<?> userInfo = userService.updateInfo(loggedInUser.toString(), userDTO);
 			if (userInfo != null) {
 				return ResponseEntity.ok(userInfo);
 			} else {
