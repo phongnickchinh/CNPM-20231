@@ -3,6 +3,7 @@ package com.example.cnpm.quanlythuchinhatro.service;
 import com.example.cnpm.quanlythuchinhatro.dto.StatusSmallTransactionInRoomDTO;
 import com.example.cnpm.quanlythuchinhatro.model.SmallTransaction;
 import com.example.cnpm.quanlythuchinhatro.repository.SmallTransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,6 +13,7 @@ import java.util.List;
 public class SmallTransactionServiceImpl implements SmallTransactionService{
     private final SmallTransactionRepository smallTransactionRepository;
 
+    @Autowired
     public SmallTransactionServiceImpl(SmallTransactionRepository smallTransactionRepository) {
         this.smallTransactionRepository = smallTransactionRepository;
     }

@@ -28,10 +28,11 @@ public class FeeWithDeadlineController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?>  create(@RequestBody FeeWithDeadline feeWithDeadline) {
-        feeWithDeadlineService.createFeeWithDeadline(feeWithDeadline);
+    public ResponseEntity<?>  create(@RequestBody FeeWithDeadlineDTO fee) {
+        feeWithDeadlineService.createFeeWithDeadline(fee);
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Tạo chi phí có thời hạn thành công"));
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         feeWithDeadlineService.deleteFeeWithDeadline(id);
