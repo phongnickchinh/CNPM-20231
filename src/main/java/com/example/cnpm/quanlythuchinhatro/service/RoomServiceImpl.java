@@ -6,7 +6,9 @@ import com.example.cnpm.quanlythuchinhatro.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoomServiceImpl implements RoomService{
@@ -40,4 +42,5 @@ public class RoomServiceImpl implements RoomService{
 //        }).toList();
         return roomDtos;
     }
+
 }

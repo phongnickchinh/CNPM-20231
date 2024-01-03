@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import com.example.cnpm.quanlythuchinhatro.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,16 +21,21 @@ import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
-	 @Autowired
-	 private UserRepository userRepository;
+	 private final UserRepository userRepository;
 	
-	 @Autowired
-	 private PasswordEncoder passwordEncoder;
+	 private final PasswordEncoder passwordEncoder;
 	 
-	 @Autowired
-	 private SecurityQuestionRepository securityQuestionRepository;
+	 private final SecurityQuestionRepository securityQuestionRepository;
 
-	 public ResponseEntity<String> signUp(UserSignUpRequest userSignUpRequest) {
+
+	@Autowired
+	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, SecurityQuestionRepository securityQuestionRepository) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.securityQuestionRepository = securityQuestionRepository;
+	}
+
+	public ResponseEntity<String> signUp(UserSignUpRequest userSignUpRequest) {
 		 if (userRepository.findByUsername(userSignUpRequest.getUsername()).isPresent()) {
 			 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("EXISTED_USERNAME");
 		 }

@@ -1,13 +1,19 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
+import com.example.cnpm.quanlythuchinhatro.dto.FeeWDStatusDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.FeeWithDeadlineDTO;
+import com.example.cnpm.quanlythuchinhatro.dto.StatusSmallTransactionInRoomDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.UserDTO;
 import com.example.cnpm.quanlythuchinhatro.model.FeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.repository.FeeWithDeadlineRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +70,34 @@ public class FeeWithDeadlineServiceImpl implements FeeWithDeadlineService{
         }
     }
 
+//    @Override
+//    public StatusSmallTransactionInRoomDTO getQuickStatus(Integer roomId, Integer userId) {
+//        BigDecimal mySpent = smallTransactionRepository.sumSpentByUserInRoom(userId, roomId);
+//        BigDecimal roomAverage = smallTransactionRepository.averageSpentInRoom(roomId);
+//        return new StatusSmallTransactionInRoomDTO(mySpent, roomAverage);
+//    }
+    @Override
+    public List<FeeWDStatusDTO> userStatusFeeWD(Integer roomId, String username){
+        Integer userId = feeWithDeadlineRepository.convertUsernameToUserId(username);
 
+        BigDecimal pricePerUser = feeWithDeadlineRepository.pricePerUser(userId, roomId);
+
+        List<FeeWDStatusDTO> feeWDStatusDTOList = feeWithDeadlineRepository.getFeeInfo(roomId, userId, pricePerUser);
+
+        return feeWDStatusDTOList;
+
+    }
+
+    /*public List<FeeWDStatusDTO> getFeeStatusByRoomId(Integer roomId, String username) {
+        Integer userId = feeWithDeadlineRepository.convertUsernameToUserId(username);
+        Optional<FeeWithDeadline> fee = feeWithDeadlineRepository.findById(userId);
+        if(fee.isPresent()) {
+            if()
+            return fee;
+        }
+        return null;
+    }
+*/
 
 //    public User updateInfo(String username, UserDTO userDTO) {
 //
