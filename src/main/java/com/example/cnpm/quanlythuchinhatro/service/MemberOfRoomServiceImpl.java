@@ -1,5 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
+import com.example.cnpm.quanlythuchinhatro.model.MemberOfRoom;
 import org.springframework.stereotype.Service;
 import com.example.cnpm.quanlythuchinhatro.repository.MemberOfRoomRepository;
 
@@ -15,5 +16,12 @@ public class MemberOfRoomServiceImpl implements MemberOfRoomService {
     public List<Object[]> listMemberOfRoom(Integer roomId) {
         return memberOfRoomRepository.getAllMemberOfRoom(roomId);
     }
-    
+
+    public void addMemberToRoom(Integer roomId, Integer userId, Integer status) {
+        MemberOfRoom memberOfRoom = new MemberOfRoom();
+        memberOfRoom.setRoomId(roomId);
+        memberOfRoom.setUserId(userId);
+        memberOfRoom.setStatus(status);
+        memberOfRoomRepository.save(memberOfRoom);
+    }
 }

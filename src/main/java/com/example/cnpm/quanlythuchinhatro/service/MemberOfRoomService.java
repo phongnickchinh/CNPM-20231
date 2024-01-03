@@ -8,4 +8,6 @@ import java.util.List;
 public interface MemberOfRoomService {
 
     public List<Object[]> listMemberOfRoom(Integer roomId);
+
+    void addMemberToRoom(Integer roomId, Integer userId, Integer status);
 }
