@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 	                return ResponseEntity.ok("Password changed successfully");
 	            } else {
 	                // Trả về lỗi nếu mật khẩu cũ không đúng
-	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect old password");
+	                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("WRONG_PASSWORD");
 	            }
 	        } else {
 	            // Trả về lỗi nếu không tìm thấy người dùng
