@@ -1,5 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.controller;
 
+import com.example.cnpm.quanlythuchinhatro.dto.*;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,13 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.cnpm.quanlythuchinhatro.dto.ChangePasswordRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.LoginRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
 import com.example.cnpm.quanlythuchinhatro.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("")
@@ -33,7 +32,7 @@ public class UserController {
 
 
 	 @PostMapping("/login")
-	    public ResponseEntity<?> login(@RequestBody LoginRequest userLoginRequest, HttpSession session) {
+	 public ResponseEntity<?> login(@RequestBody LoginRequest userLoginRequest, HttpSession session) {
 	        // Gọi phương thức login từ UserService
 	        ResponseEntity<?> responseEntity = userService.login(userLoginRequest);
 
@@ -44,8 +43,8 @@ public class UserController {
 	        }
 
 	        return responseEntity;
-	    }	 
-	@GetMapping("/logout2")
+	 }
+	@GetMapping("/logout")
 		public ResponseEntity<String> logout(HttpSession session) {
 			session.removeAttribute("loggedInUser");
 			return new ResponseEntity<>("Đăng xuất thành công", HttpStatus.OK);
@@ -77,18 +76,18 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
 		}
 	}
-	@GetMapping("/update")
-	public ResponseEntity<?> updateInfo(HttpSession session, @RequestBody User user) {
+	@PutMapping("/update")
+	public ResponseEntity<?> updateInfo(HttpSession session, @RequestBody UserDTO userDTO) {
 		 Object loggedInUser = session.getAttribute("loggedInUser");
 		if (loggedInUser != null) {
-			User userInfo = userService.updateInfo(loggedInUser.toString(), user);
+			User userInfo = userService.updateInfo(loggedInUser.toString(), userDTO);
 			if (userInfo != null) {
 				return ResponseEntity.ok(userInfo);
 			} else {
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update user information");
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Failed to update user information"));
 			}
 		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "No user is logged in"));
 		}
 	}
 	@PostMapping("/change-password")
