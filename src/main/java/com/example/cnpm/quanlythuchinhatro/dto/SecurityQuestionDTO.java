@@ -16,8 +16,14 @@ public class SecurityQuestionDTO {
 		this.question = question;
 	}
 	public SecurityQuestionDTO(Integer id, String question) {
+		super();
 		this.id = id;
 		this.question = question;
 	}
+	public SecurityQuestionDTO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	  
 	  
 }
