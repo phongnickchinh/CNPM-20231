@@ -1,5 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.cnpm.quanlythuchinhatro.dto.SecurityQuestionAnswerRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.SecurityQuestionDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.SecurityQuestionRequest;
 import com.example.cnpm.quanlythuchinhatro.model.SecurityQuestion;
@@ -47,7 +49,7 @@ public class SecurityQuestionService {
 
 	                return ResponseEntity.ok("Security question added successfully");
 	            } else {
-	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+	                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_PASSWORD");
 	            }
 	        } else {
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -90,6 +92,55 @@ public class SecurityQuestionService {
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Security question not found");
+        }
+    }
+
+    public ResponseEntity<?> getSecurityQuestionsByUsername(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<SecurityQuestion> securityQuestions = securityQuestionRepository.findByUser(user);
+
+            if (securityQuestions.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("USER_DOESNOT_HAVE_SECURITY_QUESTION");
+            } else {
+                List<SecurityQuestionDTO> dtoList = new ArrayList<>();
+                for (SecurityQuestion question : securityQuestions) {
+                    SecurityQuestionDTO dto = new SecurityQuestionDTO();
+                    dto.setId(question.getId());
+                    dto.setQuestion(question.getQuestion());
+                    dtoList.add(dto);
+                }
+                return ResponseEntity.ok(dtoList);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("USERNAME_DOESNOT_EXIST");
+        }
+    }
+
+    public ResponseEntity<?> answerSecurityQuestionAndChangePassword(SecurityQuestionAnswerRequest request) {
+        Optional<SecurityQuestion> optionalQuestion = securityQuestionRepository.findById(request.getQuestionId());
+
+        if (optionalQuestion.isPresent()) {
+            SecurityQuestion question = optionalQuestion.get();
+            if (question.getAnswer().equals(request.getAnswer())) {
+                Optional<User> optionalUser = userRepository.findById(question.getUserId());
+
+                if (optionalUser.isPresent()) {
+                    User user = optionalUser.get();
+                    user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+                    userRepository.save(user);
+
+                    return ResponseEntity.ok("Password changed successfully");
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("USER_DOESNOT_EXIST");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("WRONG_ANSWER_SECURITY_QUESTION");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("SECURITY_QUESTION_NOT_FOUND");
         }
     }
 }

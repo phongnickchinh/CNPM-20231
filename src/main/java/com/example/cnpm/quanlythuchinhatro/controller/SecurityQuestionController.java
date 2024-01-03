@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.cnpm.quanlythuchinhatro.dto.ForgotPasswordRequest;
+import com.example.cnpm.quanlythuchinhatro.dto.SecurityQuestionAnswerRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.SecurityQuestionRequest;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
@@ -60,5 +61,15 @@ public class SecurityQuestionController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
         }
+    }
+    
+    @GetMapping("/get-by-username")
+    public ResponseEntity<?> getSecurityQuestionsByUsername(@RequestParam String username) {
+        return securityQuestionService.getSecurityQuestionsByUsername(username);
+    }
+    
+    @PostMapping("/answer-and-change-password")
+    public ResponseEntity<?> answerSecurityQuestionAndChangePassword(@RequestBody SecurityQuestionAnswerRequest request) {
+        return securityQuestionService.answerSecurityQuestionAndChangePassword(request);
     }
 }
