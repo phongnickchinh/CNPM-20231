@@ -13,6 +13,6 @@ public interface JoinRoomRequestRepository extends JpaRepository<JoinRoomRequest
     //tim kiem join room request theo userId va roomId
     JoinRoomRequest findByUserIdAndRoomId(Integer userId, Integer roomId);
 
-    
+
 }
 

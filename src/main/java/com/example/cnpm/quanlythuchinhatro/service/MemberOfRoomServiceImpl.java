@@ -4,6 +4,7 @@ import com.example.cnpm.quanlythuchinhatro.dto.MemberOfRoomDTO;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import com.example.cnpm.quanlythuchinhatro.model.MemberOfRoom;
 import org.springframework.stereotype.Service;
 import com.example.cnpm.quanlythuchinhatro.repository.MemberOfRoomRepository;
 
@@ -18,21 +19,15 @@ public class MemberOfRoomServiceImpl implements MemberOfRoomService {
     private final UserRepository userRepository;
 
     @Override
-    public List<MemberOfRoomDTO> listMemberOfRoom(Integer roomId) {
-        List<User> members = userRepository.getAllMemberOfRoom(roomId);
+    public List<Object[]> listMemberOfRoom(Integer roomId) {
+        return memberOfRoomRepository.getAllMemberOfRoom(roomId);
+    }
 
-        List<MemberOfRoomDTO> memberDTOs = new ArrayList<>();
-        return members.stream().map(m -> {
-            MemberOfRoomDTO memb = new MemberOfRoomDTO();
-            memb.setId(m.getId());
-            memb.setName(m.getName());
-            memb.setPhoneNumber(m.getPhoneNumber());
-            memb.setBankName(m.getBankName());
-            memb.setBankNumber(m.getBankAccountNumber());
-            memb.setAvatarUrl(m.getAvatarUrl());
-
-            memberDTOs.add(memb);
-            return memb;
-        }).toList();
+    public void addMemberToRoom(Integer roomId, Integer userId, Integer status) {
+        MemberOfRoom memberOfRoom = new MemberOfRoom();
+        memberOfRoom.setRoomId(roomId);
+        memberOfRoom.setUserId(userId);
+        memberOfRoom.setStatus(status);
+        memberOfRoomRepository.save(memberOfRoom);
     }
 }
