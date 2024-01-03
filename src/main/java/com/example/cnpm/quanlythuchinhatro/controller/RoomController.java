@@ -26,10 +26,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RestController
 @RequestMapping("/room")
 public class RoomController {
-    @Autowired
+
     private RoomService roomService;
     private MemberOfRoomService memberOfRoomService;
     private JoinRoomRequestService joinRoomRequestService;
+    @Autowired
     public RoomController(RoomService roomService, MemberOfRoomService memberOfRoomService, JoinRoomRequestService joinRoomRequestService) {
         this.roomService = roomService;
         this.memberOfRoomService = memberOfRoomService;

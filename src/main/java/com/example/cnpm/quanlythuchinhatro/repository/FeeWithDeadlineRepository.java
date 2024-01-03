@@ -39,4 +39,6 @@ public interface FeeWithDeadlineRepository extends JpaRepository<FeeWithDeadline
     GROUP BY f.feeName, f.deadline, f.status
     """)
     List<FeeWDStatusDTO> getFeeInfo(@Param("roomId") Integer roomId, @Param("userId") Integer userId, @Param("pricePerUser") BigDecimal pricePerUser);
+
+
 }

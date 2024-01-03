@@ -8,6 +8,9 @@ import com.example.cnpm.quanlythuchinhatro.model.FeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.repository.FeeWithDeadlineRepository;
+import com.example.cnpm.quanlythuchinhatro.repository.MemberOfRoomRepository;
+import com.example.cnpm.quanlythuchinhatro.repository.UserFeeWithDeadlineRepository;
+import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +26,12 @@ import java.util.Optional;
 @Service
 public class FeeWithDeadlineServiceImpl implements FeeWithDeadlineService{
     private final FeeWithDeadlineRepository feeWithDeadlineRepository;
-    public FeeWithDeadlineServiceImpl(FeeWithDeadlineRepository feeWithDeadlineRepository) {
+    private final MemberOfRoomRepository memberOfRoomRepository;
+    private final UserFeeWithDeadlineRepository userFeeWithDeadlineRepository;
+    public FeeWithDeadlineServiceImpl(FeeWithDeadlineRepository feeWithDeadlineRepository, MemberOfRoomRepository memberOfRoomRepository, UserFeeWithDeadlineRepository userFeeWithDeadlineRepository) {
         this.feeWithDeadlineRepository = feeWithDeadlineRepository;
+        this.memberOfRoomRepository = memberOfRoomRepository;
+        this.userFeeWithDeadlineRepository = userFeeWithDeadlineRepository;
     }
 
     @Override
@@ -35,6 +42,17 @@ public class FeeWithDeadlineServiceImpl implements FeeWithDeadlineService{
         fee.setMoney(feeWithDeadlineDTO.getPrice());
         fee.setDeadline(feeWithDeadlineDTO.getDeadline());
         feeWithDeadlineRepository.save(fee);
+
+        List<Integer> userIds = memberOfRoomRepository.findUserIdsByRoomId(fee.getRoomId());
+
+        for (Integer userId : userIds) {
+            UserFeeWithDeadline userFee = new UserFeeWithDeadline();
+            userFee.setUserId(userId);
+            userFee.setFeeId(fee.getId());
+            userFee.setStatus(0);
+            userFeeWithDeadlineRepository.save(userFee);
+        }
+
         return ResponseEntity.ok("Tạo giao thành công");
     }
 
