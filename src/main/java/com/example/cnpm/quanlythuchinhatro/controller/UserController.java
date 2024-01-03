@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -102,6 +103,20 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No user is logged in");
         }
     }
+	@PutMapping("/update_avatar")
+	public ResponseEntity<?> updateInfo(HttpSession session, @RequestBody UpdateAvatarRequest updateAvatarRequest) {
+		 Object loggedInUser = session.getAttribute("loggedInUser");
+		if (loggedInUser != null) {
+			ResponseEntity<?> userInfo = userService.updateAvatar(loggedInUser.toString(), updateAvatarRequest);
+			if (userInfo != null) {
+				return ResponseEntity.ok(userInfo);
+			} else {
+				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", "Failed to update user information"));
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "No user is logged in"));
+		}
+	}
 }
 
 
