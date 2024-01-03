@@ -16,5 +16,5 @@ public class UserDTO {
     private String bankName;
     @Getter
     @Setter
-    private String name;
+    private String fullname;
 }

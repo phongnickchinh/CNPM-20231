@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 			User user = userDB.get();
 			if(userDTO.getPhoneNumber() != null ) {user.setPhoneNumber(userDTO.getPhoneNumber());}
 			if(userDTO.getBankName() != null ) {user.setBankName(userDTO.getBankName());}
-			if(userDTO.getName() != null ) {user.setName(userDTO.getName());}
+			if(userDTO.getFullname() != null ) {user.setName(userDTO.getFullname());}
 			if(userDTO.getBankNumber() != null ) {user.setBankAccountNumber(userDTO.getBankNumber());}
 
 			userRepository.save(user);
