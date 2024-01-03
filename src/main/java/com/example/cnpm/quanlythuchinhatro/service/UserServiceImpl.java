@@ -127,4 +127,18 @@ public class UserServiceImpl implements UserService {
 	        }
 	    }
 	 
+	@Override
+	public ResponseEntity<?> updateAvatar(String username, UpdateAvatarRequest updateAvatarRequest) {
+		Optional<User> userDB = userRepository.findByUsername(username);
+
+		if(userDB.isPresent()) {
+			User user = userDB.get();
+			if(updateAvatarRequest.getAvatarUrl() != null ) {user.setAvatarUrl(updateAvatarRequest.getAvatarUrl());}
+			userRepository.save(user);
+			return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Cập nhật thông tin thành công"));
+		} else {
+			return ResponseEntity.badRequest().body("Cập nhât thông tin không thành công");
+		}
+	}
+	 
 }
