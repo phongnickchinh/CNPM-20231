@@ -23,4 +23,6 @@ public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Inte
 
     @Query("SELECT mor.userId FROM MemberOfRoom mor WHERE mor.roomId = :roomId")
     List<Integer> findUserIdsByRoomId(@Param("roomId") Integer roomId);
+
+    boolean existsByUserIdAndRoomIdAndStatus(Integer userId, Integer roomId, Integer status);
 }

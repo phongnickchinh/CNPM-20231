@@ -22,6 +22,7 @@ public class FeeWithDeadlineDTO {
     private Date deadline;
     @Setter
     @Getter
+    @JsonProperty("price")
     private BigDecimal price;
     @Setter
     @Getter
