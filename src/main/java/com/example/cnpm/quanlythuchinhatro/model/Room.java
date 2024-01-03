@@ -1,9 +1,13 @@
 package com.example.cnpm.quanlythuchinhatro.model;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
 @Table(name = "Room")
 public class Room {
 
@@ -16,12 +20,8 @@ public class Room {
     @Column(name = "name")
     private String roomName;
 
-    //numberofmember
-    @Column(name = "number_of_member")
-    private Integer numberOfMember;
-
     @Column(name = "admin_id")
-    private Integer admin_id;
+    private Integer adminId;
 
     @Column(name = "address")
     private String address;

@@ -1,5 +1,7 @@
 package com.example.cnpm.quanlythuchinhatro.controller;
 
+import com.example.cnpm.quanlythuchinhatro.dto.RoomDto;
+import com.example.cnpm.quanlythuchinhatro.model.Room;
 import com.example.cnpm.quanlythuchinhatro.service.JoinRoomRequestService;
 import com.example.cnpm.quanlythuchinhatro.service.MemberOfRoomService;
 import com.example.cnpm.quanlythuchinhatro.service.RoomService;
@@ -34,9 +36,11 @@ public class RoomController {
     }
 
     @GetMapping("/listRoom")
-    public List<Object[]> listRoom(HttpSession session) {
+    public ResponseEntity<List<RoomDto>>  listRoom(HttpSession session) {
         Object loggedInUser = session.getAttribute("loggedInUser");
-        return roomService.listRoom((String) loggedInUser);
+        List<RoomDto> list = roomService.listRoom(loggedInUser.toString());
+        return ResponseEntity.status(HttpStatus.OK).body(list);
+//        return ResponseEntity.ok(list);
     }
     @GetMapping("/memberOfRoom")
     public List<Object[]> getAllMemberOfRoom(@RequestParam("roomId") Integer roomId) {

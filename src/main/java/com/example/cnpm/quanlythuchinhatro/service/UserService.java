@@ -1,13 +1,7 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
-import java.util.Optional;
-
+import com.example.cnpm.quanlythuchinhatro.dto.*;
 import org.springframework.http.ResponseEntity;
-
-import com.example.cnpm.quanlythuchinhatro.dto.LoginRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.UpdateUserRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.UserSignUpRequest;
-import com.example.cnpm.quanlythuchinhatro.model.User;
 
 public interface UserService {
 	
@@ -16,5 +10,12 @@ public interface UserService {
 	ResponseEntity<?> login(LoginRequest userLoginRequest);
 
 	UpdateUserRequest getUserInfo(String username);
-	User updateInfo(String username, User user);
+
+	ResponseEntity<?> updateInfo(String username, UserDTO userDTO);
+
+	ResponseEntity<?> changePassword(String username, ChangePasswordRequest changePasswordRequest);
+
+	 ResponseEntity<?> updateAvatar(String username, UpdateAvatarRequest updateAvatarRequest);
+
+	
 }
