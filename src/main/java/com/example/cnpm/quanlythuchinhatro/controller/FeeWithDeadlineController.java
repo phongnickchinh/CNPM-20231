@@ -1,10 +1,12 @@
 package com.example.cnpm.quanlythuchinhatro.controller;
 
+import com.example.cnpm.quanlythuchinhatro.dto.FeeWDStatusDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.FeeWithDeadlineDTO;
 import com.example.cnpm.quanlythuchinhatro.model.FeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.service.FeeWithDeadlineService;
 import com.example.cnpm.quanlythuchinhatro.service.UserFeeWithDeadlineService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +28,11 @@ public class FeeWithDeadlineController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?>  create(@RequestBody FeeWithDeadline feeWithDeadline) {
-        feeWithDeadlineService.createFeeWithDeadline(feeWithDeadline);
+    public ResponseEntity<?>  create(@RequestBody FeeWithDeadlineDTO fee) {
+        feeWithDeadlineService.createFeeWithDeadline(fee);
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Tạo chi phí có thời hạn thành công"));
     }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         feeWithDeadlineService.deleteFeeWithDeadline(id);
@@ -55,5 +58,12 @@ public class FeeWithDeadlineController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/userStatusFeeWD")
+    public ResponseEntity<List<FeeWDStatusDTO>> getUserStatus(@RequestParam Integer roomId, HttpSession httpSession) {
+        Object username = httpSession.getAttribute("loggedInUser");
+        List<FeeWDStatusDTO> feeStatusList = feeWithDeadlineService.userStatusFeeWD(roomId, username.toString());
+        return ResponseEntity.ok(feeStatusList);
     }
 }

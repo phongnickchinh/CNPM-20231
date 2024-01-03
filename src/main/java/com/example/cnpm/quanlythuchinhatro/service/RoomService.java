@@ -5,6 +5,7 @@ import com.example.cnpm.quanlythuchinhatro.model.Room;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RoomService {
     List<RoomDto> listRoom(String username);

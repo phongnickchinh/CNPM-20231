@@ -1,17 +1,23 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
+import com.example.cnpm.quanlythuchinhatro.dto.MemberOfRoomDTO;
+import com.example.cnpm.quanlythuchinhatro.model.User;
+import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import com.example.cnpm.quanlythuchinhatro.model.MemberOfRoom;
 import org.springframework.stereotype.Service;
 import com.example.cnpm.quanlythuchinhatro.repository.MemberOfRoomRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class MemberOfRoomServiceImpl implements MemberOfRoomService {
 
-    private final MemberOfRoomRepository memberOfRoomRepository;
-    public MemberOfRoomServiceImpl(MemberOfRoomRepository memberOfRoomRepository) {
-        this.memberOfRoomRepository = memberOfRoomRepository;
-    }
+    private final UserRepository userRepository;
+
     @Override
     public List<Object[]> listMemberOfRoom(Integer roomId) {
         return memberOfRoomRepository.getAllMemberOfRoom(roomId);
