@@ -2,14 +2,12 @@ package com.example.cnpm.quanlythuchinhatro.controller;
 
 import com.example.cnpm.quanlythuchinhatro.dto.CreateRoomRequest;
 import com.example.cnpm.quanlythuchinhatro.dto.JoinRoomRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.MemberOfRoomDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.RoomDto;
 import com.example.cnpm.quanlythuchinhatro.model.Room;
 import com.example.cnpm.quanlythuchinhatro.service.JoinRoomRequestService;
 import com.example.cnpm.quanlythuchinhatro.service.MemberOfRoomService;
 import com.example.cnpm.quanlythuchinhatro.service.RoomService;
 import jakarta.servlet.http.HttpSession;
-import net.sf.jsqlparser.statement.select.Join;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.cnpm.quanlythuchinhatro.dto.ChangeJRRStatus;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -48,8 +48,8 @@ public class RoomController {
 //        return ResponseEntity.ok(list);
     }
     @GetMapping("/memberOfRoom")
-    public ResponseEntity<List<MemberOfRoomDTO>> getAllMemberOfRoom(@RequestParam("roomId") Integer roomId) {
-        List<MemberOfRoomDTO> list = memberOfRoomService.listMemberOfRoom(roomId);
+    public ResponseEntity<List<Map<String, Object>>> getAllMemberOfRoom(@RequestParam("roomId") Integer roomId) {
+        List<Map<String, Object>> list = memberOfRoomService.listMemberOfRoom(roomId);
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 

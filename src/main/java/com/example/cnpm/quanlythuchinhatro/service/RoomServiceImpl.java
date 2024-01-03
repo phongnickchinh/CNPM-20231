@@ -84,12 +84,13 @@ public class RoomServiceImpl implements RoomService{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("USER_HAS_BEEN_IN_ROOM");
         }
         Integer userId = userRepository.convertUsernameToUserId(username);
-        Optional<JoinRoomRequest> request = joinRoomRequestRepository.findByUserIdAndRoomId(userId, roomId);
+        Optional<JoinRoomRequest> request = Optional.ofNullable(joinRoomRequestRepository.findByUserIdAndRoomId(userId, roomId));
         if (request.isEmpty()) {
             JoinRoomRequest joinRoomRequest = new JoinRoomRequest();
             joinRoomRequest.setRoomId(roomId);
             joinRoomRequest.setUserId(userId);
             joinRoomRequest.setStatus(1);
+            joinRoomRequest.setRequestDate(new java.sql.Date(System.currentTimeMillis()));
             joinRoomRequestRepository.save(joinRoomRequest);
         }
         else {
