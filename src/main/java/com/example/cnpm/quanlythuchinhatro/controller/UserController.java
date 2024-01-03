@@ -33,12 +33,12 @@ public class UserController {
 	 @PostMapping("/login")
 	 public ResponseEntity<?> login(@RequestBody LoginRequest userLoginRequest, HttpSession session) {
 		 ResponseEntity<?> response = userService.login(userLoginRequest);
-	        
+
 		 // Nếu đăng nhập thành công, lưu thông tin người dùng vào session
-		 if (response.getStatusCode().equals(HttpStatus.OK)) {
-			 session.setAttribute("loggedInUser", userLoginRequest.getUsername());
-		 }
-		 return response;
+		if (response.getStatusCode().equals(HttpStatus.OK)) {
+			session.setAttribute("loggedInUser", userLoginRequest.getUsername());
+		}
+		return response;
 	    }
 	@GetMapping("/logout")
 	public ResponseEntity<String> logout(HttpSession session) {
