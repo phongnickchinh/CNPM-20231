@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Repository
 public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Integer> {
-    @Query("SELECT u.id AS id, u.name AS fullName, u.phoneNumber AS phoneNumber, u.bankName AS bankName, u.bankAccountNumber AS bankNumber, u.avatarUrl AS avatarUrl FROM MemberOfRoom mr JOIN User u ON mr.userId = u.id WHERE mr.roomId =:roomId")
+    @Query("SELECT u.id AS id, u.name AS fullname, u.phoneNumber AS phoneNumber, u.bankName AS bankName, u.bankAccountNumber AS bankNumber, u.avatarUrl AS avatarUrl FROM MemberOfRoom mr JOIN User u ON mr.userId = u.id WHERE mr.roomId =:roomId")
     List<Map<String, Object>> getAllMemberOfRoom(Integer roomId);
     
 
