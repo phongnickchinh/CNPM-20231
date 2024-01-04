@@ -12,4 +12,7 @@ public interface JoinRoomRequestService {
     public Boolean approval(Integer roomId, Integer userId, Boolean status);
 
     List<JoinRoomRequestDto> getAllJoinRoomRequests();
+
+    boolean cancelJoinRoomRequest(Integer roomId, Integer userId);
+
 }

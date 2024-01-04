@@ -2,6 +2,7 @@ package com.example.cnpm.quanlythuchinhatro.controller;
 
 import com.example.cnpm.quanlythuchinhatro.dto.*;
 import com.example.cnpm.quanlythuchinhatro.model.Room;
+import com.example.cnpm.quanlythuchinhatro.repository.UserRepository;
 import com.example.cnpm.quanlythuchinhatro.service.JoinRoomRequestService;
 import com.example.cnpm.quanlythuchinhatro.service.MemberOfRoomService;
 import com.example.cnpm.quanlythuchinhatro.service.RoomService;
@@ -30,6 +31,8 @@ public class RoomController {
     private RoomService roomService;
     private MemberOfRoomService memberOfRoomService;
     private JoinRoomRequestService joinRoomRequestService;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     public RoomController(RoomService roomService, MemberOfRoomService memberOfRoomService, JoinRoomRequestService joinRoomRequestService) {
         this.roomService = roomService;
@@ -106,6 +109,23 @@ public class RoomController {
     public ResponseEntity<List<JoinRoomRequestDto>> getAllJoinRoomRequests() {
         List<JoinRoomRequestDto> requests = joinRoomRequestService.getAllJoinRoomRequests();
         return ResponseEntity.ok(requests);
+    }
+
+    @DeleteMapping("/joinRoomRequests/cancel")
+    public ResponseEntity<String> cancelJoinRoomRequest(@RequestParam Integer roomId, HttpSession session) {
+        Object loggedInUser = session.getAttribute("loggedInUser");
+            if (loggedInUser == null) {
+            System.out.println("No login");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
+        String username = (String)loggedInUser;
+        Integer userId = userRepository.convertUsernameToUserId(username);
+        boolean isCancelled = joinRoomRequestService.cancelJoinRoomRequest(roomId, userId);
+        if (isCancelled) {
+            return ResponseEntity.ok("Yêu cầu hủy tham gia phòng đã được xử lý thành công.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy yêu cầu tham gia phòng.");
+        }
     }
     
 }

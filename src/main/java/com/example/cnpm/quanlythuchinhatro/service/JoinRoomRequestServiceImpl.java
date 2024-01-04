@@ -1,6 +1,7 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.example.cnpm.quanlythuchinhatro.dto.JoinRoomRequestDto;
@@ -52,5 +53,14 @@ public class JoinRoomRequestServiceImpl implements JoinRoomRequestService{
         dto.setStatus(request.getStatus());
         dto.setRoomId(request.getRoomId());
         return dto;
+    }
+
+    public boolean cancelJoinRoomRequest(Integer roomId, Integer userId) {
+        Optional<JoinRoomRequest> joinRoomRequestOptional = joinRoomRequestRepository.findByRoomIdAndUserId(roomId, userId);
+        if (joinRoomRequestOptional.isPresent()) {
+            joinRoomRequestRepository.delete(joinRoomRequestOptional.get());
+            return true;
+        }
+        return false;
     }
 }
