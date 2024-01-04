@@ -1,12 +1,16 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.example.cnpm.quanlythuchinhatro.dto.JoinRoomRequestDto;
 import com.example.cnpm.quanlythuchinhatro.repository.JoinRoomRequestRepository;
+import com.example.cnpm.quanlythuchinhatro.repository.MemberOfRoomRepository;
 import com.example.cnpm.quanlythuchinhatro.model.JoinRoomRequest;
+import com.example.cnpm.quanlythuchinhatro.model.MemberOfRoom;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +19,14 @@ public class JoinRoomRequestServiceImpl implements JoinRoomRequestService{
 
     @Autowired
     private JoinRoomRequestRepository joinRoomRequestRepository;
-    public JoinRoomRequestServiceImpl(JoinRoomRequestRepository joinRoomRequestRepository) {
+    private MemberOfRoomRepository  memberOfRoomRepository;
+    public JoinRoomRequestServiceImpl(JoinRoomRequestRepository joinRoomRequestRepository, MemberOfRoomRepository memberOfRoomRepository) {
         this.joinRoomRequestRepository = joinRoomRequestRepository;
+        this.memberOfRoomRepository = memberOfRoomRepository;
     }
 
     @Override
-    public List<Object[]> getJRRForAdmin(Integer roomId) {
+    public List<Map<String, Object>> getJRRForAdmin(Integer roomId) {
         return joinRoomRequestRepository.getJRRForAdmin(roomId);
     }
     @Override
@@ -29,8 +35,14 @@ public class JoinRoomRequestServiceImpl implements JoinRoomRequestService{
         if(jrr == null) return false;
         else{
             if(status == true){
+                MemberOfRoom newMember = new MemberOfRoom();
                 jrr.setStatus(2);
+                newMember.setRoomId(roomId);
+                newMember.setUserId(userId);
+                newMember.setStatus(1);
+                newMember.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
                 joinRoomRequestRepository.save(jrr);
+                memberOfRoomRepository.save(newMember);
                 return true;
             }
             else{

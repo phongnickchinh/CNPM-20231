@@ -13,6 +13,7 @@ import java.util.Map;
 public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Integer> {
     @Query("SELECT u.id AS id, u.name AS fullName, u.phoneNumber AS phoneNumber, u.bankName AS bankName, u.bankAccountNumber AS bankNumber, u.avatarUrl AS avatarUrl FROM MemberOfRoom mr JOIN User u ON mr.userId = u.id WHERE mr.roomId =:roomId")
     List<Map<String, Object>> getAllMemberOfRoom(Integer roomId);
+    
 
     @Query(value = """
 	SELECT count(distinct user_id)
@@ -25,4 +26,10 @@ public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Inte
     List<Integer> findUserIdsByRoomId(@Param("roomId") Integer roomId);
 
     boolean existsByUserIdAndRoomIdAndStatus(Integer userId, Integer roomId, Integer status);
+
+    @Query("SELECT mr FROM MemberOfRoom mr WHERE mr.userId =:userId AND mr.roomId =:roomId AND mr.status = 1")
+    MemberOfRoom findByUserIdAndRoomId(Integer userId, Integer roomId);
+
+    @Query("SELECT COUNT(mr) FROM MemberOfRoom mr WHERE mr.roomId =:roomId AND mr.status = 1")
+    Integer countMember(Integer roomId);
 }

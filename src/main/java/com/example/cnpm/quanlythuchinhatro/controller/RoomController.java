@@ -12,16 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -53,9 +46,10 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @GetMapping("/joinRoomRequest")
-    public List<Object[]> getAllJoinRoomRequest(@RequestParam("roomId") Integer roomId) {
-        return joinRoomRequestService.getJRRForAdmin(roomId);
+    @GetMapping("/viewJRRForAdmin")
+    public ResponseEntity<List<Map<String, Object>>> getAllJoinRoomRequest(@RequestParam("roomId") Integer roomId) {
+        List<Map<String, Object>> list = joinRoomRequestService.getJRRForAdmin(roomId);
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping("/create")
@@ -103,6 +97,29 @@ public class RoomController {
             if(success) return ResponseEntity.ok("Đã từ chối yêu cầu");
             else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy yêu cầudd");
         }
+    }
+    @GetMapping("/memberOfRoom/deleteMember")
+    public ResponseEntity<String> deleteMember(@RequestParam("roomId") Integer roomId, @RequestParam("userId") Integer userId) {
+        Boolean success =memberOfRoomService.deleteMember(userId, roomId);
+        if(success) return ResponseEntity.ok("Xóa thành viên thành công");
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy thành viên");
+    }
+
+    //chuyển nhượng quyền trưởng phòng
+    @GetMapping("/switchAdmin")
+    public ResponseEntity<String> switchAdmin(@RequestParam("roomId") Integer roomId, @RequestParam("newAdminId") Integer userId) {
+        Boolean success = roomService.switchAdmin(roomId, userId);
+        if(success) return ResponseEntity.ok("Chuyển nhượng thành công");
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không thành công");
+    }
+    
+    @GetMapping("/leaveRoom")
+    public ResponseEntity<String> leaveRoom(@RequestParam("roomId") Integer roomId, HttpSession session) {
+        Object loggedInUser = session.getAttribute("loggedInUser");
+        Integer state= memberOfRoomService.leaveRoom(roomId, loggedInUser.toString());
+        if(state == 0) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy thành viên");
+        else if(state == 1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("ROOM_ADMIN_CAN_NOT_LEAVE_ROOM");
+        else return ResponseEntity.ok("Rời phòng thành công");
     }
 
     @GetMapping("/joinRoomRequests")

@@ -9,8 +9,7 @@ import java.util.Map;
 
 public interface RoomService {
     List<RoomDto> listRoom(String username);
-
     Room createRoom(String name, String address, String username);
-
     ResponseEntity<String> joinRoom(Integer roomId, String username);
+    public Boolean switchAdmin(Integer roomId, Integer userId);
 }

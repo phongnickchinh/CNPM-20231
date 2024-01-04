@@ -100,6 +100,15 @@ public class RoomServiceImpl implements RoomService{
         return ResponseEntity.status(HttpStatus.OK).body("Thành Công");
     }
 
+    @Override
+    public Boolean switchAdmin(Integer roomId, Integer userId) {
+        Room room = roomRepository.findById(roomId).orElse(null);
+        if(room == null) return false;
+        room.setAdminId(userId);
+        roomRepository.save(room);
+        return true;
+    }
+
     private boolean userAlreadyInRoom(Integer userId, Integer roomId) {
 
         return memberOfRoomRepository.existsByUserIdAndRoomIdAndStatus(userId, roomId, 1);
