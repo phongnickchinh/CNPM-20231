@@ -2,30 +2,28 @@ package com.example.cnpm.quanlythuchinhatro.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-public class FeeWithDeadlineDTO {
+public class SmallTransactionDTO {
+    @Setter
+    @Getter
+    private Integer id;
     @Setter
     @Getter
     private Integer roomId;
     @Setter
     @Getter
     @JsonProperty("name")
-    private String name;
+    private String itemName;
     @Setter
     @Getter
-    private Date deadline;
+    @JsonProperty("date")
+    private String transactionTime;
     @Setter
     @Getter
-    @JsonProperty("price")
-    private BigDecimal price;
+    private String price;
     @Setter
     @Getter
-    private Integer status;
-
+    private Integer userId;
 }
