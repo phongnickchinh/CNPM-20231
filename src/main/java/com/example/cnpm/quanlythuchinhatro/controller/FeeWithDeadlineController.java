@@ -3,6 +3,7 @@ package com.example.cnpm.quanlythuchinhatro.controller;
 import com.example.cnpm.quanlythuchinhatro.dto.FeeWDStatusDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.FeeWithDeadlineDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.ListFeeWDDTO;
+import com.example.cnpm.quanlythuchinhatro.dto.StatusFeeWDRoomDTO;
 import com.example.cnpm.quanlythuchinhatro.model.FeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.service.FeeWithDeadlineService;
@@ -44,9 +45,9 @@ public class FeeWithDeadlineController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<FeeWithDeadline>  updateFeeWithDeadline(@PathVariable("id") Integer id, @RequestBody FeeWithDeadlineDTO feeWithDeadline) {
+    public ResponseEntity<?>  updateFeeWithDeadline(@PathVariable("id") Integer id, @RequestBody ListFeeWDDTO feeWithDeadline) {
         FeeWithDeadline fee = feeWithDeadlineService.updateFeeWithDeadline(id, feeWithDeadline);
-        return ResponseEntity.status(HttpStatus.OK).body(fee);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "Cập nhật thành công"));
     }
 
     @PatchMapping("/reverseStatus/{userId}/{feeId}")
@@ -65,5 +66,10 @@ public class FeeWithDeadlineController {
         Object username = httpSession.getAttribute("loggedInUser");
         List<FeeWDStatusDTO> feeStatusList = feeWithDeadlineService.userStatusFeeWD(roomId, username.toString());
         return ResponseEntity.ok(feeStatusList);
+    }
+
+    @GetMapping("/roomStatusFeeWD")
+    public ResponseEntity<?> getRoomStatusFeeWD(@RequestParam Integer roomId) {
+        return ResponseEntity.ok(feeWithDeadlineService.roomStatusFeeWD(roomId));
     }
 }

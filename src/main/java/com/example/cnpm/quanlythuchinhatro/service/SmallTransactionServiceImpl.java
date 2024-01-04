@@ -60,23 +60,7 @@ public class SmallTransactionServiceImpl implements SmallTransactionService{
             return ResponseEntity.badRequest().body("Cập nhât thông tin không thành công");
         }
     }
-//    public ResponseEntity<?> updateInfo(String username, UserDTO userDTO) {
-//
-//        Optional<User> userDB = userRepository.findByUsername(username);
-//
-//        if(userDB.isPresent()) {
-//            User user = userDB.get();
-//            if(userDTO.getPhoneNumber() != null ) {user.setPhoneNumber(userDTO.getPhoneNumber());}
-//            if(userDTO.getBankName() != null ) {user.setBankName(userDTO.getBankName());}
-//            if(userDTO.getFullname() != null ) {user.setName(userDTO.getFullname());}
-//            if(userDTO.getBankNumber() != null ) {user.setBankAccountNumber(userDTO.getBankNumber());}
-//
-//            userRepository.save(user);
-//            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Cập nhật thông tin thành công"));
-//        } else {
-//            return ResponseEntity.badRequest().body("Cập nhât thông tin không thành công");
-//        }
-//    }
+
     @Override
     public void deleteSmallTransaction(Integer id) {
         smallTransactionRepository.deleteById(id);

@@ -70,20 +70,6 @@ public class FeeWithDeadlineServiceImpl implements FeeWithDeadlineService{
         return feeDTOs;
     }
 
-//    @Override
-//    public List<RoomDto> listRoom(String username) {
-//        List<Room> rooms = roomRepository.listRoom(username);
-//
-//        List<RoomDto> roomDtos = new ArrayList<>();
-//        for (Room r : rooms) {
-//            RoomDto rd = new RoomDto();
-//            rd.setId(r.getId());
-//            rd.setRoomName(r.getRoomName());
-//            rd.setAddress(r.getAddress());
-//            rd.setIsAdmin(r.getAdminId() != null);
-//            roomDtos.add(rd);
-//        }
-
     @Override
     public void deleteFeeWithDeadline(Integer id) {
         feeWithDeadlineRepository.deleteById(id);
@@ -92,26 +78,20 @@ public class FeeWithDeadlineServiceImpl implements FeeWithDeadlineService{
 
 
     @Override
-    public FeeWithDeadline updateFeeWithDeadline(Integer id, FeeWithDeadlineDTO feeWithDeadlineDTO) {
+    public FeeWithDeadline updateFeeWithDeadline(Integer id, ListFeeWDDTO listFeeWDDTO) {
 
         Optional<FeeWithDeadline> feeWithDeadlineDB = feeWithDeadlineRepository.findById(id);
 
         if (feeWithDeadlineDB.isPresent()) {
             FeeWithDeadline fee = feeWithDeadlineDB.get();
-            if (feeWithDeadlineDTO.getStatus() != null) {
-                fee.setStatus(feeWithDeadlineDTO.getStatus());
+            if (listFeeWDDTO.getFeeName() != null) {
+                fee.setFeeName(listFeeWDDTO.getFeeName());
             }
-            if (feeWithDeadlineDTO.getDeadline() != null) {
-                fee.setDeadline(feeWithDeadlineDTO.getDeadline());
+            if (listFeeWDDTO.getDeadline() != null) {
+                fee.setDeadline(listFeeWDDTO.getDeadline());
             }
-            if(feeWithDeadlineDTO.getName() != null) {
-                fee.setFeeName(feeWithDeadlineDTO.getName());
-            }
-            if(feeWithDeadlineDTO.getPrice() != null) {
-                fee.setMoney(feeWithDeadlineDTO.getPrice());
-            }
-            if (feeWithDeadlineDTO.getRoomId() != null) {
-                fee.setRoomId(feeWithDeadlineDTO.getRoomId());
+            if (listFeeWDDTO.getMoney() != null) {
+                fee.setMoney(listFeeWDDTO.getMoney());
             }
 
             feeWithDeadlineRepository.save(fee);
@@ -131,6 +111,9 @@ public class FeeWithDeadlineServiceImpl implements FeeWithDeadlineService{
 
         return feeWDStatusDTOList;
 
+    }
+    public List<Map<String,Object>> roomStatusFeeWD(Integer roomId) {
+        return feeWithDeadlineRepository.getList(roomId);
     }
 
 }
