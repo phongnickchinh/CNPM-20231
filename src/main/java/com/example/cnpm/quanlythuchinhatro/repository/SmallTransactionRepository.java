@@ -13,6 +13,8 @@ public interface SmallTransactionRepository extends JpaRepository<SmallTransacti
     List<SmallTransaction> findByRoomIdAndTransactionTimeStartingWith(Integer roomId, String datePrefix);
     List<SmallTransaction> findByRoomIdAndUserIdAndTransactionTimeStartingWith(Integer roomId, Integer userId, String datePrefix);
 
+    @Query("SELECT id FROM User WHERE username = :username ")
+    Integer convertUsernameToUserId (String username);
     @Query("SELECT SUM(st.price) FROM SmallTransaction st WHERE st.userId = :userId AND st.roomId = :roomId")
     BigDecimal sumSpentByUserInRoom(Integer userId, Integer roomId);
     @Query("SELECT (SUM(s.price)/(COUNT(DISTINCT s.userId))) AS averageRoom FROM SmallTransaction s WHERE s.roomId = :roomId")

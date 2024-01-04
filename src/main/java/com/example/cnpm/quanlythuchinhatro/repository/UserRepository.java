@@ -18,4 +18,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Query(value = "SELECT u.* FROM member_of_room mr JOIN user u ON mr.user_id = u.id WHERE mr.room_id =:roomId", nativeQuery = true)
 	List<User> getAllMemberOfRoom(Integer roomId);
+
 }

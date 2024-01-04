@@ -2,12 +2,12 @@ package com.example.cnpm.quanlythuchinhatro.controller;
 
 import com.example.cnpm.quanlythuchinhatro.dto.FeeWDStatusDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.FeeWithDeadlineDTO;
+import com.example.cnpm.quanlythuchinhatro.dto.ListFeeWDDTO;
 import com.example.cnpm.quanlythuchinhatro.model.FeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.model.UserFeeWithDeadline;
 import com.example.cnpm.quanlythuchinhatro.service.FeeWithDeadlineService;
 import com.example.cnpm.quanlythuchinhatro.service.UserFeeWithDeadlineService;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +39,8 @@ public class FeeWithDeadlineController {
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Delete a fee with deadline"));
     }
     @GetMapping("/getByRoomId/{roomId}")
-    public ResponseEntity<List<FeeWithDeadline>>  getAllFeeWithDeadline(@PathVariable("roomId") Integer roomId) {
-        List<FeeWithDeadline> list = feeWithDeadlineService.getAllFeeWithDeadline(roomId);
+    public ResponseEntity<List<ListFeeWDDTO>> getAllFeeWithDeadline(@PathVariable("roomId") Integer roomId) {
+        List<ListFeeWDDTO> list = feeWithDeadlineService.listFeeWDByRoomId(roomId);
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
     @PutMapping("/update/{id}")

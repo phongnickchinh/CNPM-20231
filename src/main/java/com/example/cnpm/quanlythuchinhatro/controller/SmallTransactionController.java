@@ -1,12 +1,15 @@
 package com.example.cnpm.quanlythuchinhatro.controller;
 
+import com.example.cnpm.quanlythuchinhatro.dto.SmallTransactionDTO;
 import com.example.cnpm.quanlythuchinhatro.dto.StatusSmallTransactionInRoomDTO;
 import com.example.cnpm.quanlythuchinhatro.model.SmallTransaction;
 import com.example.cnpm.quanlythuchinhatro.service.SmallTransactionService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/transaction")
@@ -17,14 +20,16 @@ public class SmallTransactionController {
         this.smallTransactionService = smallTransactionService;
     }
     @PostMapping("/create")
-    public String createSmallTransaction(@RequestBody SmallTransaction smallTransaction) {
-        smallTransactionService.createSmallTransaction(smallTransaction);
-        return "Giao dịch đã tạo thành công";
+    public ResponseEntity<?> createSmallTransaction(@RequestBody SmallTransactionDTO smallTransactionDTO, HttpSession session) {
+        Object loggedInUser = session.getAttribute("loggedInUser");
+        smallTransactionService.createSmallTransaction(smallTransactionDTO, loggedInUser.toString());
+        return ResponseEntity.ok(Map.of("message", "Tạo giao dịch thành công"));
     }
-    @PutMapping("/update/{id}")
-    public String updateSmallTransaction(@PathVariable("id") Integer id, @RequestBody SmallTransaction smallTransaction) {
-        smallTransactionService.updateSmallTransaction(id, smallTransaction);
-        return "Giao dịch đã cập nhật thành công";
+    @PutMapping("/update")
+    public ResponseEntity<?> updateSmallTransaction(@RequestParam("id") Integer id, @RequestBody SmallTransactionDTO smallTransaction, HttpSession session) {
+        Object loggedInUser = session.getAttribute("loggedInUser");
+        smallTransactionService.updateSmallTransaction(id, smallTransaction, loggedInUser.toString());
+        return ResponseEntity.ok(Map.of("message","Giao dịch đã cập nhật thành công")) ;
     }
     @DeleteMapping("/delete/{id}")
     public String deleteSmallTransaction(@PathVariable("id") Integer id) {
@@ -48,11 +53,12 @@ public class SmallTransactionController {
             @PathVariable Integer month) {
         return ResponseEntity.ok(getTransactionsByRoomId(roomId, year, month, null).getBody());
     }
-    @GetMapping("/getStatusMoney/{roomId}/{userId}")
+    @GetMapping("/getStatusMoney")
     public ResponseEntity<StatusSmallTransactionInRoomDTO> getStatusMoney(
-            @PathVariable Integer roomId,
-            @PathVariable Integer userId) {
-        StatusSmallTransactionInRoomDTO statusSmallTransactionInRoomDTO = smallTransactionService.getQuickStatus(roomId, userId);
+            @RequestParam Integer roomId,
+            HttpSession session) {
+        Object username = session.getAttribute("loggedInUser");
+        StatusSmallTransactionInRoomDTO statusSmallTransactionInRoomDTO = smallTransactionService.getQuickStatus(roomId,(String) username);
         return ResponseEntity.ok(statusSmallTransactionInRoomDTO);
     }
 }
