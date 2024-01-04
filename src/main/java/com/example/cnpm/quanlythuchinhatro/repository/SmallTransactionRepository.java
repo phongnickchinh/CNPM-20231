@@ -13,7 +13,7 @@ import java.util.Map;
 @Repository
 public interface SmallTransactionRepository extends JpaRepository<SmallTransaction, Integer> {
     @Query(value = """
-    SELECT sm.*, u.name AS fullname
+    SELECT u.name, sm.user_id AS userId, sm.transaction_time AS transactionTime, sm.room_id AS roomId, sm.price, sm.note, sm.item_name AS itemName, sm.id
     FROM small_transaction sm
     JOIN user u ON u.id = sm.user_id
     WHERE DATE_FORMAT(sm.transaction_time, '%Y-%m') = :yearMonth AND sm.room_id = :roomId
@@ -21,7 +21,8 @@ public interface SmallTransactionRepository extends JpaRepository<SmallTransacti
     List<Map<String, Object>> getTransactionsByYearMonth(@Param("roomId") Integer roomId, @Param("yearMonth") String yearMonth);
 
     @Query(value = """
-    SELECT sm.*, u.name AS fullname
+
+    SELECT u.name, sm.user_id AS userId, sm.transaction_time AS transactionTime, sm.room_id AS roomId, sm.price, sm.note, sm.item_name AS itemName, sm.id
     FROM small_transaction sm
     JOIN user u ON u.id = sm.user_id
     WHERE DATE_FORMAT(sm.transaction_time, '%Y-%m') = :yearMonth AND sm.room_id = :roomId AND sm.user_id =:userId
