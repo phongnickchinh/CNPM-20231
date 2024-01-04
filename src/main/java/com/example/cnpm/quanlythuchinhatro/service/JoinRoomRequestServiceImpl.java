@@ -60,7 +60,7 @@ public class JoinRoomRequestServiceImpl implements JoinRoomRequestService{
 
     private JoinRoomRequestDto convertToDto(JoinRoomRequest request) {
         JoinRoomRequestDto dto = new JoinRoomRequestDto();
-        dto.setRoomName(request.getRoom().getRoomName()); // Giả sử có mối quan hệ giữa JoinRoomRequest và Room
+        dto.setRoomName(request.getRoom().getRoomName());
         dto.setRequestDate(request.getRequestDate());
         dto.setStatus(request.getStatus());
         dto.setRoomId(request.getRoomId());
@@ -70,7 +70,9 @@ public class JoinRoomRequestServiceImpl implements JoinRoomRequestService{
     public boolean cancelJoinRoomRequest(Integer roomId, Integer userId) {
         Optional<JoinRoomRequest> joinRoomRequestOptional = joinRoomRequestRepository.findByRoomIdAndUserId(roomId, userId);
         if (joinRoomRequestOptional.isPresent()) {
-            joinRoomRequestRepository.delete(joinRoomRequestOptional.get());
+            JoinRoomRequest joinRoomRequest = joinRoomRequestOptional.get();
+            joinRoomRequest.setStatus(3);
+            joinRoomRequestRepository.save(joinRoomRequest);
             return true;
         }
         return false;
