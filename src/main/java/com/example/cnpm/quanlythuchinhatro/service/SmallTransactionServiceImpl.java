@@ -30,7 +30,7 @@ public class SmallTransactionServiceImpl implements SmallTransactionService{
     }
 
     @Override
-    public ResponseEntity<?> createSmallTransaction(SmallTransactionDTO smallTransactionDTO, String userName) {
+    public ResponseEntity<SmallTransaction> createSmallTransaction(SmallTransactionDTO smallTransactionDTO, String userName) {
         SmallTransaction smallTransaction = new SmallTransaction();
         Integer userId = smallTransactionRepository.convertUsernameToUserId(userName);
         smallTransaction.setItemName(smallTransactionDTO.getItemName());
@@ -40,7 +40,7 @@ public class SmallTransactionServiceImpl implements SmallTransactionService{
         smallTransaction.setUserId(userId);
         smallTransactionRepository.save(smallTransaction);
 
-        return ResponseEntity.status(HttpStatus.OK).body("Giao dịch đã tạo thành công");
+        return ResponseEntity.status(HttpStatus.OK).body(smallTransaction);
     }
 
     @Override

@@ -20,10 +20,10 @@ public class SmallTransactionController {
         this.smallTransactionService = smallTransactionService;
     }
     @PostMapping("/create")
-    public ResponseEntity<?> createSmallTransaction(@RequestBody SmallTransactionDTO smallTransactionDTO, HttpSession session) {
+    public ResponseEntity<SmallTransaction> createSmallTransaction(@RequestBody SmallTransactionDTO smallTransactionDTO, HttpSession session) {
         Object loggedInUser = session.getAttribute("loggedInUser");
-        smallTransactionService.createSmallTransaction(smallTransactionDTO, loggedInUser.toString());
-        return ResponseEntity.ok(Map.of("message", "Tạo giao dịch thành công"));
+        SmallTransaction smallTransaction = smallTransactionService.createSmallTransaction(smallTransactionDTO, loggedInUser.toString()).getBody();
+        return ResponseEntity.ok(smallTransaction);
     }
     @PutMapping("/update")
     public ResponseEntity<?> updateSmallTransaction(@RequestParam("id") Integer id, @RequestBody SmallTransactionDTO smallTransaction, HttpSession session) {
