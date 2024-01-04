@@ -79,6 +79,7 @@ public class UserServiceImpl implements UserService {
 				userInfo.setBankName(user.getBankName());
 				userInfo.setBankNumber(user.getBankAccountNumber());
 				userInfo.setAvatarUrl(user.getAvatarUrl());
+				userInfo.setId(user.getId());
 				// Các trường thông tin khác
 				return userInfo;
 			} else {

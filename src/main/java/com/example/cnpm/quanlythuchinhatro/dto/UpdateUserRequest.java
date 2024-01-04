@@ -1,8 +1,14 @@
 package com.example.cnpm.quanlythuchinhatro.dto;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class UpdateUserRequest {
-	private String username;
+	@Setter
+	@Getter
+	private Integer id;
+		private String username;
 	 private String fullname;
 	 private String phoneNumber;
 	 private String bankName;

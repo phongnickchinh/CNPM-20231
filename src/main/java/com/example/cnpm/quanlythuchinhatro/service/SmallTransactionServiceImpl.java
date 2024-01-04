@@ -44,7 +44,7 @@ public class SmallTransactionServiceImpl implements SmallTransactionService{
     }
 
     @Override
-    public ResponseEntity<?> updateSmallTransaction(Integer id, SmallTransactionDTO smallTransactionDTO, String userName) {
+    public ResponseEntity<SmallTransaction> updateSmallTransaction(Integer id, SmallTransactionDTO smallTransactionDTO, String userName) {
         Optional<SmallTransaction> smallDb = smallTransactionRepository.findById(id);
         Integer userId = smallTransactionRepository.convertUsernameToUserId(userName);
 
@@ -55,9 +55,9 @@ public class SmallTransactionServiceImpl implements SmallTransactionService{
             if(smallTransactionDTO.getTransactionTime() != null) {smallTransaction.setTransactionTime(smallTransactionDTO.getTransactionTime());}
             smallTransaction.setUserId(userId);
             smallTransactionRepository.save(smallTransaction);
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","Cập nhật thông tin thành công"));
+            return ResponseEntity.status(HttpStatus.OK).body(smallTransaction);
         } else {
-            return ResponseEntity.badRequest().body("Cập nhât thông tin không thành công");
+            return ResponseEntity.badRequest().body(null);
         }
     }
 

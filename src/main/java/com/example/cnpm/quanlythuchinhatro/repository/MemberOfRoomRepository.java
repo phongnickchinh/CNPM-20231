@@ -15,7 +15,7 @@ public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Inte
             "u.bank_account_number AS bankNumber, u.avatar_url AS avatarUrl " +
             "FROM member_of_room mr " +
             "JOIN user u ON mr.user_id = u.id " +
-            "WHERE mr.room_id = 1 AND mr.status = 1 ", nativeQuery = true)
+            "WHERE mr.room_id = :roomId AND mr.status = 1 ", nativeQuery = true)
     List<Map<String, Object>> getAllMemberOfRoom(Integer roomId);
 
     @Query("SELECT mor.userId FROM MemberOfRoom mor WHERE mor.roomId = :roomId")

@@ -28,8 +28,8 @@ public class SmallTransactionController {
     @PutMapping("/update")
     public ResponseEntity<?> updateSmallTransaction(@RequestParam("id") Integer id, @RequestBody SmallTransactionDTO smallTransaction, HttpSession session) {
         Object loggedInUser = session.getAttribute("loggedInUser");
-        smallTransactionService.updateSmallTransaction(id, smallTransaction, loggedInUser.toString());
-        return ResponseEntity.ok(Map.of("message","Giao dịch đã cập nhật thành công")) ;
+        SmallTransaction smallTransactionNew = smallTransactionService.updateSmallTransaction(id, smallTransaction, loggedInUser.toString()).getBody();
+        return ResponseEntity.ok(smallTransactionNew);
     }
     @DeleteMapping("/delete/{id}")
     public String deleteSmallTransaction(@PathVariable("id") Integer id) {
