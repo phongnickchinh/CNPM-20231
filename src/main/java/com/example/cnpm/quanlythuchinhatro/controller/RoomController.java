@@ -46,7 +46,7 @@ public class RoomController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-    @GetMapping("/viewJRRForAdmin")
+    @GetMapping("/JRRForAdmin")
     public ResponseEntity<List<Map<String, Object>>> getAllJoinRoomRequest(@RequestParam("roomId") Integer roomId) {
         List<Map<String, Object>> list = joinRoomRequestService.getJRRForAdmin(roomId);
         return ResponseEntity.ok(list);
@@ -77,7 +77,7 @@ public class RoomController {
 
 
 
-    @PutMapping("/joinRoomRequest/approval")
+    @PutMapping("/JRRForAdmin/approval")
     public ResponseEntity<String> approval(
             @RequestBody ChangeJRRStatus request) {
 
