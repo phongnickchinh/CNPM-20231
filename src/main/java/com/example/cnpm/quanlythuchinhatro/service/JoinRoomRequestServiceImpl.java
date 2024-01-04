@@ -1,20 +1,32 @@
 package com.example.cnpm.quanlythuchinhatro.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.example.cnpm.quanlythuchinhatro.dto.JoinRoomRequestDto;
 import com.example.cnpm.quanlythuchinhatro.repository.JoinRoomRequestRepository;
+import com.example.cnpm.quanlythuchinhatro.repository.MemberOfRoomRepository;
 import com.example.cnpm.quanlythuchinhatro.model.JoinRoomRequest;
+import com.example.cnpm.quanlythuchinhatro.model.MemberOfRoom;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JoinRoomRequestServiceImpl implements JoinRoomRequestService{
 
+    @Autowired
     private JoinRoomRequestRepository joinRoomRequestRepository;
-    public JoinRoomRequestServiceImpl(JoinRoomRequestRepository joinRoomRequestRepository) {
+    private MemberOfRoomRepository  memberOfRoomRepository;
+    public JoinRoomRequestServiceImpl(JoinRoomRequestRepository joinRoomRequestRepository, MemberOfRoomRepository memberOfRoomRepository) {
         this.joinRoomRequestRepository = joinRoomRequestRepository;
+        this.memberOfRoomRepository = memberOfRoomRepository;
     }
 
     @Override
-    public List<Object[]> getJRRForAdmin(Integer roomId) {
+    public List<Map<String, Object>> getJRRForAdmin(Integer roomId) {
         return joinRoomRequestRepository.getJRRForAdmin(roomId);
     }
     @Override
@@ -23,8 +35,14 @@ public class JoinRoomRequestServiceImpl implements JoinRoomRequestService{
         if(jrr == null) return false;
         else{
             if(status == true){
+                MemberOfRoom newMember = new MemberOfRoom();
                 jrr.setStatus(2);
+                newMember.setRoomId(roomId);
+                newMember.setUserId(userId);
+                newMember.setStatus(1);
+                newMember.setJoinDate(new java.sql.Date(System.currentTimeMillis()));
                 joinRoomRequestRepository.save(jrr);
+                memberOfRoomRepository.save(newMember);
                 return true;
             }
             else{
@@ -33,5 +51,28 @@ public class JoinRoomRequestServiceImpl implements JoinRoomRequestService{
                 return true;
             }
         }
+    }
+
+    public List<JoinRoomRequestDto> getAllJoinRoomRequests() {
+        List<JoinRoomRequest> requests = joinRoomRequestRepository.findAll();
+        return requests.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    private JoinRoomRequestDto convertToDto(JoinRoomRequest request) {
+        JoinRoomRequestDto dto = new JoinRoomRequestDto();
+        dto.setRoomName(request.getRoom().getRoomName()); // Giả sử có mối quan hệ giữa JoinRoomRequest và Room
+        dto.setRequestDate(request.getRequestDate());
+        dto.setStatus(request.getStatus());
+        dto.setRoomId(request.getRoomId());
+        return dto;
+    }
+
+    public boolean cancelJoinRoomRequest(Integer roomId, Integer userId) {
+        Optional<JoinRoomRequest> joinRoomRequestOptional = joinRoomRequestRepository.findByRoomIdAndUserId(roomId, userId);
+        if (joinRoomRequestOptional.isPresent()) {
+            joinRoomRequestRepository.delete(joinRoomRequestOptional.get());
+            return true;
+        }
+        return false;
     }
 }

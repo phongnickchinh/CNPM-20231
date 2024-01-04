@@ -16,4 +16,12 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
             """, nativeQuery = true)
     List<Room> listRoom(String username);
 
+    //trả về AdminId của phòng có id = roomId
+    @Query(value = """
+            SELECT r.admin_id
+            FROM room r
+            WHERE r.id = :roomId
+            """, nativeQuery = true)
+    Integer getAdminId(Integer roomId);
+
 }
