@@ -1,8 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.controller;
 
-import com.example.cnpm.quanlythuchinhatro.dto.CreateRoomRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.JoinRoomRequest;
-import com.example.cnpm.quanlythuchinhatro.dto.RoomDto;
+import com.example.cnpm.quanlythuchinhatro.dto.*;
 import com.example.cnpm.quanlythuchinhatro.model.Room;
 import com.example.cnpm.quanlythuchinhatro.service.JoinRoomRequestService;
 import com.example.cnpm.quanlythuchinhatro.service.MemberOfRoomService;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.cnpm.quanlythuchinhatro.dto.ChangeJRRStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -102,6 +99,12 @@ public class RoomController {
             if(success) return ResponseEntity.ok("Đã từ chối yêu cầu");
             else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Không tìm thấy yêu cầudd");
         }
+    }
+
+    @GetMapping("/joinRoomRequests")
+    public ResponseEntity<List<JoinRoomRequestDto>> getAllJoinRoomRequests() {
+        List<JoinRoomRequestDto> requests = joinRoomRequestService.getAllJoinRoomRequests();
+        return ResponseEntity.ok(requests);
     }
     
 }

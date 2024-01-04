@@ -31,6 +31,7 @@ public class JoinRoomRequest {
         this.status = status;
     }
 
-    
-    
+    @ManyToOne
+    @JoinColumn(name = "room_id", insertable = false, updatable = false)
+    private Room room;
 }
