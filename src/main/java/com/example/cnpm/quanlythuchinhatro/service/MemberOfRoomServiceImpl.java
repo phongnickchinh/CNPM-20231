@@ -78,9 +78,6 @@ public class MemberOfRoomServiceImpl implements MemberOfRoomService {
         }
         else{
             if(adminId.equals(userId)){//nếu là admin
-                memberOfRoom.setStatus(0);
-                memberOfRoom.setOutDate(new java.sql.Date(System.currentTimeMillis()));
-                memberOfRoomRepository.save(memberOfRoom);
                 return 1;
             }
             else{//nếu là thành viên

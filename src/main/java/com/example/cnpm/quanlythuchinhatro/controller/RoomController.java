@@ -52,6 +52,8 @@ public class RoomController {
         return ResponseEntity.ok(list);
     }
 
+
+
     @PostMapping("/create")
     public ResponseEntity<Room> createRoom(@RequestBody CreateRoomRequest createRequest, HttpSession session) {
         Object loggedInUser = session.getAttribute("loggedInUser");

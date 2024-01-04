@@ -31,7 +31,7 @@ public class User {
     @Column(name = "bank_name")
     private String bankName;
 
-    @Column(name = "avatar_url")
+    @Column(name = "avatar_url", columnDefinition = "LONGTEXT")
     private String avatarUrl;
 
     public Integer getId() {
