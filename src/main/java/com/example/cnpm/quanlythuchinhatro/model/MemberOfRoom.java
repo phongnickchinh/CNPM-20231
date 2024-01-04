@@ -31,4 +31,5 @@ public class MemberOfRoom {
     //status
     @Column(name = "status")
     private Integer status;
+
 }

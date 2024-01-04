@@ -1,4 +1,6 @@
 package com.example.cnpm.quanlythuchinhatro.model;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,5 +27,6 @@ public class Room {
 
     @Column(name = "address")
     private String address;
-
+    @OneToMany(mappedBy = "room")
+    private List<User> users;
 }

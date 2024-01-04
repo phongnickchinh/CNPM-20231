@@ -32,4 +32,6 @@ public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Inte
 
     @Query("SELECT COUNT(mr) FROM MemberOfRoom mr WHERE mr.roomId =:roomId AND mr.status = 1")
     Integer countMember(Integer roomId);
+    
+    List<MemberOfRoom> findByRoomId(Integer roomId);
 }
