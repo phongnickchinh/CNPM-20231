@@ -12,11 +12,10 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
 
     @Query(value = """
             SELECT r.id, r.name, r.address, (CASE WHEN r.admin_id = m.user_id THEN r.admin_id ELSE null END) AS admin_id
-            FROM member_of_room m JOIN room r ON r.id = m.room_id WHERE m.user_id = (SELECT id FROM user WHERE username = :username)
+            FROM member_of_room m JOIN room r ON r.id = m.room_id WHERE m.user_id = (SELECT id FROM user WHERE username = :username) AND m.status = 1
             """, nativeQuery = true)
     List<Room> listRoom(String username);
 
-    //trả về AdminId của phòng có id = roomId
     @Query(value = """
             SELECT r.admin_id
             FROM room r

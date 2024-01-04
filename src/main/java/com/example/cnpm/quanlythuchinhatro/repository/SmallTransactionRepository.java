@@ -3,15 +3,30 @@ package com.example.cnpm.quanlythuchinhatro.repository;
 import com.example.cnpm.quanlythuchinhatro.model.SmallTransaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface SmallTransactionRepository extends JpaRepository<SmallTransaction, Integer> {
-    List<SmallTransaction> findByRoomIdAndTransactionTimeStartingWith(Integer roomId, String datePrefix);
-    List<SmallTransaction> findByRoomIdAndUserIdAndTransactionTimeStartingWith(Integer roomId, Integer userId, String datePrefix);
+    @Query(value = """
+    SELECT sm.*, u.name AS fullname
+    FROM small_transaction sm
+    JOIN user u ON u.id = sm.user_id
+    WHERE DATE_FORMAT(sm.transaction_time, '%Y-%m') = :yearMonth AND sm.room_id = :roomId
+    """, nativeQuery = true)
+    List<Map<String, Object>> getTransactionsByYearMonth(@Param("roomId") Integer roomId, @Param("yearMonth") String yearMonth);
+
+    @Query(value = """
+    SELECT sm.*, u.name AS fullname
+    FROM small_transaction sm
+    JOIN user u ON u.id = sm.user_id
+    WHERE DATE_FORMAT(sm.transaction_time, '%Y-%m') = :yearMonth AND sm.room_id = :roomId AND sm.user_id =:userId
+    """, nativeQuery = true)
+    List<Map<String, Object>> getTransactionsByYearMonthUserId(@Param("roomId") Integer roomId, @Param("userId") Integer userId, @Param("yearMonth") String datePrefix);
 
     @Query("SELECT id FROM User WHERE username = :username ")
     Integer convertUsernameToUserId (String username);

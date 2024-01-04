@@ -38,20 +38,21 @@ public class SmallTransactionController {
     }
 
     @GetMapping("/getByRoomId/{roomId}/{year}/{month}/{userId}")
-    public ResponseEntity<List<SmallTransaction>> getTransactionsByRoomId(
+    public ResponseEntity<?> getTransactionsByRoomId(
             @PathVariable Integer roomId,
             @PathVariable Integer year,
             @PathVariable Integer month,
             @PathVariable(required = false) Integer userId) {
-        List<SmallTransaction> transactions = smallTransactionService.getTransactions(roomId, year, month, userId);
+        List<Map<String, Object>> transactions = smallTransactionService.getTransactions(roomId, year, month, userId);
         return ResponseEntity.ok(transactions);
     }
     @GetMapping("/getByRoomId/{roomId}/{year}/{month}")
-    public ResponseEntity<List<SmallTransaction>> getTransactionsByRoomId(
+    public ResponseEntity<?> getTransactionsByRoomId(
             @PathVariable Integer roomId,
             @PathVariable Integer year,
             @PathVariable Integer month) {
-        return ResponseEntity.ok(getTransactionsByRoomId(roomId, year, month, null).getBody());
+        List<Map<String, Object>> transactions = smallTransactionService.getTransactions(roomId, year, month, null);
+        return ResponseEntity.ok(transactions);
     }
     @GetMapping("/getStatusMoney")
     public ResponseEntity<StatusSmallTransactionInRoomDTO> getStatusMoney(

@@ -96,6 +96,7 @@ public class RoomServiceImpl implements RoomService{
         else {
             JoinRoomRequest joinRoomRequest = request.get();
             joinRoomRequest.setStatus(1);
+            joinRoomRequestRepository.save(joinRoomRequest);
         }
         return ResponseEntity.status(HttpStatus.OK).body("Thành Công");
     }

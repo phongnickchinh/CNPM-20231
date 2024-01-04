@@ -11,16 +11,12 @@ import java.util.Map;
 
 @Repository
 public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Integer> {
-    @Query("SELECT u.id AS id, u.name AS fullname, u.phoneNumber AS phoneNumber, u.bankName AS bankName, u.bankAccountNumber AS bankNumber, u.avatarUrl AS avatarUrl FROM MemberOfRoom mr JOIN User u ON mr.userId = u.id WHERE mr.roomId =:roomId")
+    @Query(value = "SELECT u.id AS id, u.name AS fullname, u.phone_number AS phoneNumber, u.bank_name AS bankName, " +
+            "u.bank_account_number AS bankNumber, u.avatar_url AS avatarUrl " +
+            "FROM member_of_room mr " +
+            "JOIN user u ON mr.user_id = u.id " +
+            "WHERE mr.room_id = 1 AND mr.status = 1 ", nativeQuery = true)
     List<Map<String, Object>> getAllMemberOfRoom(Integer roomId);
-    
-
-    @Query(value = """
-	SELECT count(distinct user_id)
-	FROM member_of_room
-	where room_id = : roomId
-	""", nativeQuery = true)
-    Integer coutnUserInRoom(Integer roomId);
 
     @Query("SELECT mor.userId FROM MemberOfRoom mor WHERE mor.roomId = :roomId")
     List<Integer> findUserIdsByRoomId(@Param("roomId") Integer roomId);

@@ -6,11 +6,12 @@ import com.example.cnpm.quanlythuchinhatro.model.SmallTransaction;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SmallTransactionService {
     ResponseEntity<SmallTransaction> createSmallTransaction(SmallTransactionDTO smallTransactionDTO, String userName);
     ResponseEntity<?> updateSmallTransaction(Integer id, SmallTransactionDTO smallTransactionDTO, String userName);
     public void deleteSmallTransaction(Integer id);
-    public List<SmallTransaction> getTransactions(Integer roomId, Integer year, Integer month, Integer userId);
+    public List<Map<String, Object>> getTransactions(Integer roomId, Integer year, Integer month, Integer userId);
     StatusSmallTransactionInRoomDTO getQuickStatus(Integer roomId, String username);
 }

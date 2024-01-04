@@ -67,12 +67,12 @@ public class SmallTransactionServiceImpl implements SmallTransactionService{
     }
 
     @Override
-    public List<SmallTransaction> getTransactions(Integer roomId, Integer year, Integer month, Integer userId) {
-        String datePrefix = String.format("%d-%02d", year, month);
+    public List<Map<String, Object>> getTransactions(Integer roomId, Integer year, Integer month, Integer userId) {
+        String yearMonth = String.format("%d-%02d", year, month);
         if(userId != null) {
-            return smallTransactionRepository.findByRoomIdAndUserIdAndTransactionTimeStartingWith(roomId, userId, datePrefix);
+            return smallTransactionRepository.getTransactionsByYearMonthUserId(roomId, userId, yearMonth);
         }else {
-            return smallTransactionRepository.findByRoomIdAndTransactionTimeStartingWith(roomId, datePrefix);
+            return smallTransactionRepository.getTransactionsByYearMonth(roomId, yearMonth);
         }
     }
 
