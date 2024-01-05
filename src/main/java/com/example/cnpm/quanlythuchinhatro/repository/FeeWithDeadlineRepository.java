@@ -68,5 +68,8 @@ public interface FeeWithDeadlineRepository extends JpaRepository<FeeWithDeadline
         f.id, f.fee_name, f.deadline, uf.user_id, uf.status, m.out_date, m.status;
             """, nativeQuery = true)
     List<Map<String,Object>> getList(@Param("roomId") Integer roomId);
+    @Query(value = "SELECT * FROM fee_with_deadline WHERE room_id = :roomId AND EXTRACT(MONTH FROM deadline) = :month AND EXTRACT(YEAR FROM deadline) = :year", nativeQuery = true)
+    List<FeeWithDeadline> findByRoomIdAndMonthAndYear(@Param("roomId") Integer roomId, @Param("month") Integer month, @Param("year") Integer year);
+
 
 }

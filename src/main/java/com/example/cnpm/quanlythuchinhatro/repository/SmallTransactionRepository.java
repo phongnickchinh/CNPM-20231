@@ -35,4 +35,7 @@ public interface SmallTransactionRepository extends JpaRepository<SmallTransacti
     BigDecimal sumSpentByUserInRoom(Integer userId, Integer roomId);
     @Query("SELECT (SUM(s.price)/(COUNT(DISTINCT s.userId))) AS averageRoom FROM SmallTransaction s WHERE s.roomId = :roomId")
     BigDecimal averageSpentInRoom(Integer roomId);
+    @Query(value = "SELECT * FROM small_transaction WHERE room_id = :roomId AND EXTRACT(MONTH FROM transaction_time) = :month AND EXTRACT(YEAR FROM transaction_time) = :year", nativeQuery = true)
+    List<SmallTransaction> findByRoomIdAndMonthAndYear(@Param("roomId") Integer roomId, @Param("month") Integer month, @Param("year") Integer year);
+
 }
