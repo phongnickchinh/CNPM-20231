@@ -35,9 +35,7 @@ public class SmallTransaction {
     @Column(name = "note")
     private String note;
 
-    //constructor
-    public SmallTransaction() {
-    }
+
 
     public SmallTransaction(Integer roomId, Integer userId, String itemName, String transactionTime, String price, String note) {
         this.roomId = roomId;
@@ -48,5 +46,8 @@ public class SmallTransaction {
         this.note = note;
     }
 
-    
+
+    public SmallTransaction() {
+
+    }
 }
