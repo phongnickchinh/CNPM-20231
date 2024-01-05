@@ -97,4 +97,9 @@ public class User {
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
+    
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    private Room room;
+
 }

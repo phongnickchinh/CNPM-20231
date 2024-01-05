@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.cnpm.quanlythuchinhatro.model.Room;
 import com.example.cnpm.quanlythuchinhatro.model.User;
 
 @Repository
@@ -18,5 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	@Query(value = "SELECT u.* FROM member_of_room mr JOIN user u ON mr.user_id = u.id WHERE mr.room_id =:roomId", nativeQuery = true)
 	List<User> getAllMemberOfRoom(Integer roomId);
-
+	
+    @Query("SELECT username FROM User WHERE id = :userId ")
+    String getUsernameById(Integer userId);
 }
