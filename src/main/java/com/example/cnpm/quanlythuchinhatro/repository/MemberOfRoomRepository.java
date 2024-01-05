@@ -18,7 +18,7 @@ public interface MemberOfRoomRepository extends JpaRepository<MemberOfRoom, Inte
             "WHERE mr.room_id = :roomId AND mr.status = 1 ", nativeQuery = true)
     List<Map<String, Object>> getAllMemberOfRoom(Integer roomId);
 
-    @Query("SELECT mor.userId FROM MemberOfRoom mor WHERE mor.roomId = :roomId")
+    @Query("SELECT mor.userId FROM MemberOfRoom mor WHERE mor.roomId = :roomId AND mor.status = 1 ")
     List<Integer> findUserIdsByRoomId(@Param("roomId") Integer roomId);
 
     boolean existsByUserIdAndRoomIdAndStatus(Integer userId, Integer roomId, Integer status);
