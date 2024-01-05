@@ -141,5 +141,16 @@ public class UserServiceImpl implements UserService {
 			return ResponseEntity.badRequest().body("Cập nhât thông tin không thành công");
 		}
 	}
-	 
+    public String getFullNameById(Integer userId) {
+        // Triển khai logic để lấy tên thành viên dựa vào userId
+        // Giả sử UserRepository có phương thức findById trả về Optional<User>
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return user.getName(); // Giả sử tên của thành viên được lưu trong trường "name"
+        } else {
+            return "Unknown User";
+        }
+    }
 }
