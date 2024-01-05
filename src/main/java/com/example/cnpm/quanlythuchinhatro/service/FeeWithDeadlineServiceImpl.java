@@ -102,14 +102,9 @@ public class FeeWithDeadlineServiceImpl implements FeeWithDeadlineService{
     }
 
     @Override
-    public List<FeeWDStatusDTO> userStatusFeeWD(Integer roomId, String username){
+    public List<Map<String,Object>> userStatusFeeWD(Integer roomId, String username){
         Integer userId = feeWithDeadlineRepository.convertUsernameToUserId(username);
-
-        BigDecimal pricePerUser = feeWithDeadlineRepository.pricePerUser(userId, roomId);
-
-        List<FeeWDStatusDTO> feeWDStatusDTOList = feeWithDeadlineRepository.getFeeInfo(roomId, userId, pricePerUser);
-
-        return feeWDStatusDTOList;
+        return feeWithDeadlineRepository.userStatusFee(roomId, userId);
 
     }
     public List<Map<String,Object>> roomStatusFeeWD(Integer roomId) {

@@ -62,9 +62,9 @@ public class FeeWithDeadlineController {
     }
 
     @GetMapping("/userStatusFeeWD")
-    public ResponseEntity<List<FeeWDStatusDTO>> getUserStatus(@RequestParam Integer roomId, HttpSession httpSession) {
+    public ResponseEntity<?> getUserStatus(@RequestParam Integer roomId, HttpSession httpSession) {
         Object username = httpSession.getAttribute("loggedInUser");
-        List<FeeWDStatusDTO> feeStatusList = feeWithDeadlineService.userStatusFeeWD(roomId, username.toString());
+        List<Map<String,Object>> feeStatusList = feeWithDeadlineService.userStatusFeeWD(roomId, username.toString());
         return ResponseEntity.ok(feeStatusList);
     }
 

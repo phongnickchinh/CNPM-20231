@@ -16,6 +16,6 @@ public interface FeeWithDeadlineService {
     void deleteFeeWithDeadline(Integer id);
     List<ListFeeWDDTO> listFeeWDByRoomId(Integer roomId);
     FeeWithDeadline updateFeeWithDeadline(Integer id, ListFeeWDDTO listFeeWDDTO);
-    List<FeeWDStatusDTO> userStatusFeeWD(Integer roomId, String username);
+    List<Map<String,Object>> userStatusFeeWD(Integer roomId, String username);
     List<Map<String,Object>> roomStatusFeeWD(Integer roomId);
 }
