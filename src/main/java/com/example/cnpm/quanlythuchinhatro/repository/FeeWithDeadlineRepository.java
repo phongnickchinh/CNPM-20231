@@ -54,7 +54,8 @@ public interface FeeWithDeadlineRepository extends JpaRepository<FeeWithDeadline
         uf.user_id AS userId,
         COALESCE(uf.status, 0) AS payStatus,
         m.status AS inRoomStatus,
-        us.username AS fullname
+        us.username AS fullname,
+        f.money AS price
     FROM
         fee_with_deadline f
     JOIN
@@ -66,21 +67,21 @@ public interface FeeWithDeadlineRepository extends JpaRepository<FeeWithDeadline
     LEFT JOIN
         user_fee_with_deadline u ON f.id = u.fee_id AND u.user_id = uf.user_id
     WHERE
-        f.room_id = 1
+        f.room_id = :roomId
     GROUP BY
-        f.id, f.fee_name, f.deadline, uf.user_id, uf.status, m.out_date, m.status, us.username;
+        f.id, f.fee_name, f.deadline, uf.user_id, uf.status, m.out_date, m.status, us.username, f.money;
             """, nativeQuery = true)
     List<Map<String,Object>> getList(@Param("roomId") Integer roomId);
 
     @Query(value = """
-    SELECT f.fee_name AS feeName, f.deadline, u.status,\s
+    SELECT f.fee_name AS feeName, f.deadline, u.status, f.money AS price,
     		f.money / (select COUNT(DISTINCT memb.user_id)
                         from member_of_room memb
-                        where memb.room_id = 1
+                        where memb.room_id = :roomId
     					) AS pricePerUser
     FROM fee_with_deadline f
     JOIN user_fee_with_deadline u ON u.fee_id = f.id\s
-    WHERE u.user_id = 1 AND f.room_id = 1\s
+    WHERE u.user_id = :userId AND f.room_id = :roomId
     """, nativeQuery = true)
     List<Map<String, Object>> userStatusFee(@Param("roomId") Integer roomId, @Param("userId") Integer userId);
 
