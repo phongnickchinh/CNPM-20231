@@ -27,6 +27,7 @@ public class Room {
 
     @Column(name = "address")
     private String address;
+    
     @OneToMany(mappedBy = "room")
     private List<User> users;
 }
