@@ -54,7 +54,7 @@ public interface FeeWithDeadlineRepository extends JpaRepository<FeeWithDeadline
         uf.user_id AS userId,
         COALESCE(uf.status, 0) AS payStatus,
         m.status AS inRoomStatus,
-        us.username AS fullname,
+        us.name AS fullname,
         f.money AS price
     FROM
         fee_with_deadline f
