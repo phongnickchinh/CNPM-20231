@@ -1,0 +1,161 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+button.primary {
+  background-color: #00A9FF;
+  color: black;
+  font-size: 20px;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 6px 32px;
+  border: none;
+  border-radius: 19px;
+  font-weight: 600;
+  cursor: pointer;
+}
+button.primary:hover {
+  background-color: #0289cc;
+}
+
+input.primary {
+  padding: 12px;
+  margin-bottom: 16px;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  width: 100%;
+}
+
+form .errors {
+  color: red;
+}
+
+.pop-up-wrap {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.3);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  font-size: 20px;
+}
+.pop-up-wrap .pop-up {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #79E0EE;
+  max-width: 100%;
+  max-height: 100%;
+}
+.pop-up-wrap .pop-up .content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 40px;
+  padding-bottom: 100px;
+}
+.pop-up-wrap .pop-up .content .header {
+  text-align: center;
+  font-weight: 600;
+  font-size: 40px;
+  margin-bottom: 36px;
+}
+.pop-up-wrap .pop-up .button-group {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+}
+.pop-up-wrap .pop-up .button-group button {
+  margin-left: 12px;
+}
+.pop-up-wrap .pop-up form {
+  width: 600px;
+}
+
+.chart {
+  display: flex;
+}
+.chart .left {
+  display: flex;
+  justify-content: center;
+}
+.chart .left .ylabel {
+  writing-mode: tb-rl;
+  transform: rotate(180deg);
+  text-align: center;
+}
+.chart .right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.chart .right .main-chart {
+  flex: 1;
+  display: flex;
+  border: 1px solid;
+}
+.chart .right .main-chart .col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+.chart .right .main-chart .col .value-explain {
+  text-align: center;
+}
+.chart .right .main-chart .col .val-visualize {
+  background-color: #79E0EE;
+}
+.chart .right .main-chart .col:nth-child(even) .val-visualize {
+  background-color: #67d5e4;
+}
+.chart .right .column-explain {
+  display: flex;
+}
+.chart .right .column-explain .col {
+  flex: 1;
+  text-align: center;
+}
+.chart .right .xlabel {
+  text-align: center;
+}
+
+.text-clickable {
+  text-decoration: underline;
+  color: #1DB435;
+  cursor: pointer;
+}
+.text-clickable:hover {
+  color: #07791a;
+}
+
+select {
+  min-width: 200px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: #f5f5f5;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #bebebe;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #6e6e6e;
+}
+
+::-webkit-scrollbar-track:hover {
+  background-color: #f0f0f0;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #f5f5f5;
+}/*# sourceMappingURL=common.css.map */

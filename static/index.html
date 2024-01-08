@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý thu chi</title>
+
+    <!-- <link rel="stylesheet" href="./resources/bootstrap.min.css">
+    <script src="./resources/bootstrap.bundle.min.js"></script> -->
+
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./common.css">
+
+    <script src="./resources/jquery.min.js"></script>
+    <script src="./lib.js"></script>
+    <script src="./api.js"></script>
+
+    <script>
+        let user = null
+        let currentRoom = null
+        function redirectToLoginPage() {
+            window.location.href = './login.html'
+        }
+    </script>
+</head>
+
+<body>
+    <nav id="navbar">
+        <div id="nav-left-side">
+            <!-- list rooms -->
+            <div class="op-with-room" style="display: none;">
+                <img src="./resources/add.png" alt="" class="add-room">
+                <div class="join-room">
+                    <input type="text">
+                    <div class="img-wrap">
+                        <img src="./resources/right-arrow.png" alt="">
+                    </div>
+                </div>
+
+                <div id="view-join-room-req-of-user" class="text-clickable">
+                    Xem yêu cầu<br>
+                    tham gia đã gửi
+                </div>
+            </div>
+
+            <!-- room details -->
+            <div class="room-details">
+                <div class="room-name">
+                    Phòng nào đó
+                </div>
+
+                <div class="switch-room text-clickable">
+                    Đổi phòng
+                </div>
+            </div>
+        </div>
+        <div id="nav-right-side">
+            <div class="user-icon-wrapper">
+                <img src="./resources/user-images/default-avatar.jpg" alt="" id="user-icon">
+            </div>
+            <div class="log-out text-clickable">Log out</div>
+
+            <!-- Redirect to login.html when user logout -->
+            <script>
+                let jImg = $('#nav-right-side img')
+                $(() => jImg.width(jImg.height()))
+                $('#nav-right-side .log-out').click(() => {
+                    api.logout({
+                        onDone: () => { window.location.href = './login.html' }
+                    })
+                })
+            </script>
+        </div>
+    </nav>
+
+    <!-- Redirect to login.html if user haven't logined -->
+    <script>
+        api.getUserInfo({
+            onDone: (resultUser) => {
+                user = resultUser
+                jImg.attr('src', user.avatarUrl || './resources/user-images/default-avatar.jpg')
+            },
+            onFailed: redirectToLoginPage
+        })
+    </script>
+
+    <div id="main-container">
+        <!-- Adjust the container height the first time acess page and when widow resize -->
+        <script>
+            function resizeMainContainer() {
+                $('#main-container').outerHeight($(window).height() - $('#navbar').outerHeight())
+            }
+            resizeMainContainer()
+            $(window).resize(resizeMainContainer)
+        </script>
+
+        <div id="left-side-bar">
+            <div class="item active" tab-id="input-transaction">
+                <span>Nhập liệu chi tiêu</span>
+            </div>
+            <div class="item" tab-id="fixed-costs">
+                <span>Chi phí cố định</span>
+            </div>
+            <div class="item" tab-id="request-payments">
+                <span>Yêu cầu đóng phí</span>
+            </div>
+            <div class="item" tab-id="room-statistics">
+                <span>Thống kê phòng</span>
+            </div>
+            <div class="item" tab-id="room-members">
+                <span>Thông tin phòng</span>
+            </div>
+
+            <!-- Switch tab handler -->
+            <script>
+                $('#left-side-bar .item').click(function () {
+                    let item = $(this)
+                    if (!item.hasClass('active')) {
+                        item.siblings('.item').removeClass('active')
+                        item.addClass('active')
+                        $('#main-container > .content').each(function () {
+                            $(this).toggle($(this).attr('id') == item.attr('tab-id'))
+                        })
+                    }
+                })
+            </script>
+        </div>
+
+        <!-- Nhập xuất giao dịch -->
+        <div class="content" id="input-transaction">
+            <div class="left">
+                <form action="">
+                    <input type="text" placeholder="@productname" class="primary" name="name">
+                    <input type="text" placeholder="@price" class="primary" name="price">
+                    <input type="text" placeholder="@dd/mm/yy" class="primary" name="date">
+
+                    <span class="errors"></span>
+                    <button class="primary submit">Submit</button>
+                </form>
+
+                <div id="money-spent">
+                    <div class="line" id="my-spent">
+                        <span class="title">You spent:</span>
+                        <span class="value value-green">230k</span>
+                    </div>
+                    <div class="line room-average">
+                        <span class="title">Room average:</span>
+                        <span class="value">100k</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <div id="list-transactions">
+                    <div class="time-control">
+                        <img src="./resources/prev.png" alt="" class="prev-month time-control-button">
+                        <div class="time">November</div>
+                        <img src="./resources/next.png" alt="" class="next-month time-control-button">
+                    </div>
+                    <select class="user-selection">
+                        <option value="">Mọi người</option>
+                        <option value="">Hùng đẹp trai</option>
+                    </select>
+
+                    <div id="transactions">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chi phí cố định -->
+        <div class="content" id="fixed-costs" style="display: none;">
+            <div class="left">
+                <!-- user -->
+                <div id="list-fixed-costs" style="display: none;">
+                    <div class="group-top">
+                        <div class="header">
+                            <div class="header-col">Tên chi phí</div>
+                            <div class="header-col">Số lượng</div>
+                        </div>
+
+                        <div class="note">
+                            <div class="title">Trạng thái:</div>
+                            <div class="item">
+                                <div class="color" style="background-color: #1BDD2E;"></div>
+                                <div class="name">Đã đóng</div>
+                            </div>
+                            <div class="item">
+                                <div class="color" style="background-color: #D80032;"></div>
+                                <div class="name">Chưa đóng</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="fixed-costs">
+                        <div class="item">
+                            <div class="title">Chi phí 1</div>
+                            <div class="value">10k</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="title">Chi phí 2</div>
+                            <div class="value done">15k</div>
+                        </div>
+
+                        <div class="item">
+                            <div class="title">Chi phí 3</div>
+                            <div class="value done">25k</div>
+                        </div>
+                    </div>
+
+                    <div class="total">
+                        <div class="title">Tổng chi phí phải thanh toán</div>
+                        <div class="value">40k</div>
+                    </div>
+                </div>
+
+                <!-- admin -->
+                <div id="list-fixed-costs-admin">
+                    <div class="header">
+                        Danh sách đóng phí có thời hạn
+                    </div>
+
+                    <div class="users">
+                        <div class="line">
+                            <div class="col">
+                                Nguyễn Văn Hùng
+                            </div>
+                            <div class="col done">
+                                Tiền điện
+                            </div>
+                            <div class="col">
+                                Tiền phòng
+                            </div>
+                        </div>
+                        <div class="line">
+                            <div class="col">
+                                Nguyễn Văn Hùng
+                            </div>
+                            <div class="col">
+                                Tiền điện
+                            </div>
+                            <div class="col done">
+                                Tiền phòng
+                            </div>
+                        </div>
+                        <div class="show-old-members text-clickable">Ẩn/hiển thị thành viên đã rời khỏi phòng</div>
+                    </div>
+
+                    <div class="total">
+                        <div class="line">
+                            <div class="col">Đã đóng</div>
+                            <div class="col">1/2</div>
+                            <div class="col">1/3</div>
+                            <div class="col">1/4</div>
+                            <div class="col">1/5</div>
+                            <div class="col">1/6</div>
+                            <div class="col">1/7</div>
+                            <div class="col">1/8</div>
+                            <div class="col">1/9</div>
+                            <div class="col">100/1000</div>
+                        </div>
+                    </div>
+
+                    <script>
+                        $('#list-fixed-costs-admin .users').scroll(function () {
+                            $('#list-fixed-costs-admin .total').scrollLeft($(this).scrollLeft())
+                        })
+                    </script>
+                </div>
+            </div>
+
+            <div class="right" style="display: none;">
+                <div id="fixed-costs-general-info">
+                    <div class="header">Tổng</div>
+                    <div class="item">
+                        <div class="title">Tiền phòng:</div>
+                        <div class="value">1700k</div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Tiền điện:</div>
+                        <div class="value">560k</div>
+                    </div>
+                    <div class="item">
+                        <div class="title">Tiền nước:</div>
+                        <div class="value">110k</div>
+                    </div>
+                    <div class="item total">
+                        <div class="title">Tổng của tổng</div>
+                        <div class="value">2370k</div>
+                    </div>
+                </div>
+
+                <div id="admin-bank-info">
+                    <div class="header">Thông tin ngân hàng</div>
+                    <div class="info">STK: 0384742590</div>
+                    <div class="info">Ngân hàng: BIDV</div>
+                    <div class="info">Pham Van Phong</div>
+                    <img src="./resources/general.jpg" alt="" class="qr-code">
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách thành viên phòng -->
+        <div class="content" id="room-members" style="display: none;">
+            <div class="room-info">
+                <div class="room-name">Tên phòng: <span class="value">123</span></div>
+                <div class="room-address">Địa chỉ: <span class="value">123</span></div>
+                <div class="room-id">ID phòng: <span class="value">123</span></div>
+                <div class="operations">
+                    <div class="leave-room text-clickable">Rời khỏi phòng</div>
+                    <div class="change-admin text-clickable">Chuyển quyền trưởng phòng</div>
+                </div>
+            </div>
+            <div class="list-members">
+                <div class="header">
+                    Danh sách thành viên
+                </div>
+
+                <!-- <div class="item">
+                    <img src="./resources/user.png" alt="">
+                    <div class="name">Name</div>
+                    <div class="phone">Phone</div>
+                    <div class="bank">
+                        Bank
+                        <div class="more-info">
+                            Chi tiết
+                        </div>
+                    </div>
+                </div> -->
+
+                <div id="view-join-room-req-of-room">
+                    <img src="./resources/add-person.png" alt="">
+                    <div class="count">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yêu cầu đóng phí, admin -->
+        <div class="content" id="request-payments" style="display: none;">
+            <div id="list-request-payments">
+                <div class="list">
+                    <form action="">
+                        <div class="headers">
+                            <div class="header">
+                                <div class="title">Tên chi phí</div>
+                                <input type="text" name="name">
+                            </div>
+                            <div class="header">
+                                <div class="title">Số tiền</div>
+                                <input type="text" name="price">
+                            </div>
+                            <div class="header">
+                                <div class="title">Thời hạn</div>
+                                <input type="text" name="deadline">
+                            </div>
+                        </div>
+                        <div class="errors" style="margin-top: 12px;"></div>
+                        <button class="submit" style="display: none;"></button>
+                    </form>
+
+                    <div class="items">
+                        <div class="row">
+                            <div class="field">
+                                <div class="wrap">1. Tiền điện</div>
+                            </div>
+                            <div class="field">
+                                <div class="wrap">1300k</div>
+                            </div>
+                            <div class="field">
+                                <div class="wrap">7/11/2023</div>
+                            </div>
+                        </div>
+
+                        <div class="more-results text-clickable">Xem thêm 15 chi phí có thời hạn</div>
+                    </div>
+                </div>
+
+                <div class="operations">
+                    <div class="op add-fee-with-dealine">
+                        <img src="./resources/add.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thống kê phòng -->
+        <div class="content" id="room-statistics" style="display: none;">
+            <div class="small-trans">
+                <div class="header">Thống kê về các giao dịch nhỏ tháng trước</div>
+                <div class="total-prev-month">
+                    Tổng số tiền:
+                    <span class="val-wrap"><span class="value">34</span>k</span>
+                </div>
+                <div class="room-average">
+                    Trung bình phòng:
+                    <span class="val-wrap"><span class="value">34</span>k</span>
+                </div>
+
+                <div class="details">
+                    <div class="user">
+                        <div class="fullname"></div>
+                        <div class="spend"></div>
+                        <div class="delta"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách phòng -->
+        <div id="list-rooms" style="display: none;">
+            <div class="my-statisic">
+                <div class="room">
+                    <div class="choose-month">
+                        <img src="./resources/prev.png" alt="" class="prev">
+                        <div class="month">Tháng 12</div>
+                        <img src="./resources/next.png" alt="" class="next">
+                    </div>
+                </div>
+
+                <div class="total-spending-each-month">
+                    <div class="choose-year">
+                        <img src="./resources/prev.png" alt="" class="prev">
+                        <div class="year">2023</div>
+                        <img src="./resources/next.png" alt="" class="next">
+                    </div>
+                </div>
+            </div>
+
+            <div class="normal-rooms">
+                <div class="room">
+                    <div class="title">Phòng 3</div>
+                </div>
+
+                <div class="room">
+                    <div class="title">Phòng 4</div>
+                </div>
+
+                <div class="room">
+                    <div class="title">Phòng 5</div>
+                </div>
+
+                <div class="room">
+                    <div class="title">Phòng 6</div>
+                </div>
+                <div class="room">
+                    <div class="title">Phòng 7</div>
+                </div>
+
+                <div class="room">
+                    <div class="title">Phòng 8</div>
+                </div>
+
+                <div class="room">
+                    <div class="title">Phòng 9</div>
+                </div>
+
+                <div class="room">
+                    <div class="title">Phòng 10</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pop-up-wrap" style="display: none;">
+        <div class="pop-up">
+            <div class="content user-avatar">
+                <div class="avatar">
+                    <img src="./resources/user-images/default-avatar.jpg" alt="">
+                    <div class="ops">
+                        <button>Thay đổi ảnh</button>
+                        <button>Xóa ảnh đại diện</button>
+                    </div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="close primary">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function showRoomDetails() {
+            $('#list-rooms').hide()
+            $('#nav-left-side .op-with-room').hide()
+            $('#left-side-bar').show()
+            $('#input-transaction').show()
+            $('#nav-left-side .room-details').show()
+            $('#nav-right-side input.message').show()
+
+            $('#navbar .room-details .room-name').html(currentRoom.roomName)
+            $('#left-side-bar .item[tab-id="input-transaction"]').click()
+
+            let isAdmin = currentRoom.isAdmin
+            $('#left-side-bar .item[tab-id="request-payments"]').toggle(isAdmin)
+        }
+
+        let initEventAllRoomStatistic = false
+        function loadListRoomViews(rooms) {
+            let s = true
+            let $statistic = $('#list-rooms .my-statisic')
+            $statistic.find('.chart').remove()
+
+            let currMonth = new Date().getMonth() + 1
+            let currYear = new Date().getFullYear()
+            // - 1 month
+            if (currMonth == 1) {
+                currMonth = 12
+                currYear --
+            } else {
+                currMonth--
+            }
+            function makeAllRoomStatisticChart() {
+                $statistic.find('.room .month').html(`Tháng ${currMonth}${currYear == new Date().getFullYear() ? '' : ' năm ' + currYear}`)
+                api.allRoomsStatistic(currMonth, currYear, {
+                    onDone: (rooms) => {
+                        $statistic.find('.room .chart').remove()
+                        let roomNames = rooms.map(({roomName}) => roomName)
+                        let totalSpendingOfRoom = OCPHS(rooms, ({roomName, totalSpending}) => [roomName, totalSpending])
+                        roomNames.sort((r1, r2) => totalSpendingOfRoom[r2] - totalSpendingOfRoom[r1])
+                        let totalSpending = roomNames.map(r => totalSpendingOfRoom[r])
+                        let $chart = $Chart(roomNames, totalSpending)
+                        $statistic.find('.room').append($chart)
+                        $chart.css({
+                            flex: 1
+                        })
+                    },
+                    onFailed: () => 1
+                })
+            }
+            if (s) makeAllRoomStatisticChart()
+
+            // Statistic total spending each month
+            let currYearToStatisticEachMonth = new Date().getFullYear()
+            function makeStatisticEachMonthChart() {
+                $statistic.find('.total-spending-each-month .chart').remove()
+                $statistic.find('.total-spending-each-month .year').html('Năm ' + currYearToStatisticEachMonth)
+                api.totalSpendingEachMonthOfYear(currYearToStatisticEachMonth, {
+                    onDone: (result) => {
+                        let labels = range(12).map(i => `Tháng<br>${i + 1}`)
+                        let $chart = $Chart(labels, result)
+                        $statistic.find('.total-spending-each-month').append($chart)
+                        $chart.css({
+                            flex: 1
+                        })
+                    },
+                    onFailed: () => 1
+                })
+            }
+            if (s) makeStatisticEachMonthChart()
+
+            // Switch year and month event
+            if (!initEventAllRoomStatistic) {
+                initEventAllRoomStatistic = true
+                
+                // First chart
+                $statistic.find('.room .choose-month .prev').click(() => {
+                    if (currMonth == 1) {
+                        currMonth = 12
+                        currYear --
+                    } else {
+                        currMonth--
+                    }
+                    makeAllRoomStatisticChart()
+                })
+                $statistic.find('.room .choose-month .next').click(() => {
+                    if (currMonth == 12) {
+                        currMonth = 1
+                        currYear++
+                    } else {
+                        currMonth++
+                    }
+                    makeAllRoomStatisticChart()
+                })
+
+                // Second chart
+                $statistic.find('.total-spending-each-month .choose-year .prev').click(() => {
+                    currYearToStatisticEachMonth--
+                    makeStatisticEachMonthChart()
+                })
+                $statistic.find('.total-spending-each-month .choose-year .next').click(() => {
+                    currYearToStatisticEachMonth++
+                    makeStatisticEachMonthChart()
+                })
+            }
+
+            $('#list-rooms .normal-rooms').html('')
+            for (let i = 0; i < rooms.length; i++) {
+                let roomHtml = (`
+                    <div class="room">
+                        <div class="title">${rooms[i].roomName}</div>
+                        <div class="mark-admin${rooms[i].isAdmin ? ' is-admin' : ''}">Trưởng phòng</div>
+                    </div>
+                `)
+                let jRoom = $(roomHtml)
+                $('#list-rooms .normal-rooms').append(jRoom)
+                jRoom.click(() => {
+                    currentRoom = rooms[i]
+                    showRoomDetails()
+                })
+            }
+        }
+
+        function showListRooms() {
+            $('#main-container > *').hide()
+            $('#nav-left-side .room-details').hide()
+            $('#nav-right-side input.message').hide()
+            $('#list-rooms').show()
+            $('#nav-left-side .op-with-room').show()
+
+            api.getRoomsOfUser({
+                onDone: loadListRoomViews
+            })
+        }
+        $('#nav-left-side .room-details .switch-room').click(showListRooms)
+        showListRooms()
+
+        // Create room
+        $('#nav-left-side .add-room').click(function () {
+            let html = `
+                <div class="header">Tạo phòng</div>
+                <form>
+                    <input type="text" class="primary" name="name">
+                    <input type="text" class="primary" name="address">
+                    <span class="errors"></span>
+                    <button class="submit" style="display: none;"></button>
+                </form>
+            `
+
+            popUp(html, {
+                hideCloseButton: true,
+                script: (jPopUp) => {
+                    FormManager(jPopUp.find('form'), {
+                        fieldNamesAndRequires: [
+                            { name: 'name', requires: 'notEmpty', vnName: 'Tên phòng' },
+                            { name: 'address', requires: 'notEmpty', vnName: 'Địa chỉ phòng' }
+                        ],
+                        onSubmit: (formData) => {
+                            let name = formData.name
+                            let address = formData.address
+                            api.createRoom(name, address, {
+                                onDone: (newRoom) => {
+                                    jPopUp.remove()
+                                    newRoom.isAdmin = true
+                                    currentRoom = newRoom
+                                    showRoomDetails()
+                                }
+                            })
+                        }
+                    })
+                },
+                buttonHtmls: ['Thoát', 'Tạo phòng mới'],
+                buttonClickHandlers: [
+                    (jPopUp) => jPopUp.remove(),
+                    (jPopUp) => jPopUp.find('form button.submit').click()
+                ]
+            })
+        })
+
+        // Join room
+        $('#nav-left-side .join-room .img-wrap').click(function () {
+            let roomId = $(this).prev().val()
+            if (roomId == '') return
+            api.createJoinRoomRequest(roomId, {
+                onDone: () => {
+                    popUpMessage('Gửi yêu cầu tham gia thành công!')
+                },
+                onFailed: (mes) => {
+                    if (mes == ERROR.ROOM_ID_DOESNOT_EXIST) {
+                        popUpMessage('Mã phòng không tồn tại!')
+                    }
+                    else if (mes == ERROR.USER_HAS_BEEN_IN_ROOM) {
+                        popUpMessage('Bạn đã ở trong phòng này rồi!')
+                    }
+                }
+            })
+        })
+
+        // View join room requests of user
+        $('#view-join-room-req-of-user').click(() => {
+            popUp('', {
+                style: {
+                    width: '1000px',
+                    height: '640px'
+                },
+                script: (jPopUp) => {
+                    api.getJoinRoomRequestOfUser({
+                        onDone: (joinReqs) => {
+                            let statusValues = {
+                                0: ['Đã bị từ chối', 'reject'],
+                                1: ['Đang chờ', 'waitting'],
+                                2: ['Đã được chấp nhận', 'accept'],
+                                3: ['Đã hủy', 'reject']
+                            }
+                            CustomDateManager.sortByDate(joinReqs, j => j.requestDate, true)
+                            joinReqs.forEach(({roomName, status, requestDate, roomId}) => {
+                                let html = `<div class="join-request of-user">
+                                    <div class="room-name">${roomName}</div>
+                                    <div class="request-date">Đã gửi lúc<br>${requestDate}</div>
+                                    <div class="status ${statusValues[status][1]}">${statusValues[status][0]}</div>
+                                    <div class="operation">${status == 1 ? 'Hủy yêu cầu' : ''}</div>
+                                </div>`
+
+                                let jElem = $(html)
+                                jPopUp.find('.content').append(jElem)
+                                jElem.find('.operation').click(() => {
+                                    api.cancelJoinRoomRequest(roomId, {
+                                        onDone: () => {
+                                            jElem.find('.operation').text('')
+                                            jElem.find('.status').text('Đã hủy').removeClass('waitting').addClass('reject')
+                                        }
+                                    })
+                                })
+                            })
+                        }
+                    })
+                }
+            })
+        })
+
+        // View join room requests of room
+        $('#view-join-room-req-of-room').click(() => {
+            popUp('<div class="header">Yêu cầu tham gia phòng</div>', {
+                style: {
+                    width: 'max-content',
+                    height: '640px'
+                },
+                script: (jPopUp) => {
+                    api.getJoinRoomRequestOfRoom(currentRoom.id, {
+                        onDone: (joinReqs) => {
+                            CustomDateManager.sortByDate(joinReqs, j => j.requestDate, true)
+                            joinReqs.forEach(({status, requestDate, roomId, userId, fullname, avatarUrl}) => {
+                                let html = `<div class="join-request of-room">
+                                    <div class="group">
+                                        <img src="${avatarUrl || './resources/user-images/default-avatar.jpg'}">
+                                        <div class="name">${fullname}</div>
+                                        <div class="request-date">Đã gửi lúc<br>${requestDate}</div>  
+                                    </div>
+                                    <div class="operation">
+                                        <img src="./resources/accept.png" class="accept">
+                                        <img src="./resources/decline.png" class="reject">
+                                    </div>
+                                </div>`
+
+                                let jElem = $(html)
+                                jPopUp.find('.content').append(jElem)
+                                jElem.find('.operation .accept').click(() => {
+                                    api.acceptJoinRoomRequest(currentRoom.id, userId, true, {
+                                        onDone: () => {
+                                            jElem.remove()
+                                            loadListRoomMembersView()
+                                        }
+                                    })
+                                })
+                                jElem.find('.operation .reject').click(() => {
+                                    api.acceptJoinRoomRequest(currentRoom.id, userId, false, {
+                                        onDone: () => {
+                                            jElem.remove()
+                                            let countReqs = $('#view-join-room-req-of-room .count')
+                                            let numRemainReq = Number(countReqs.text()) - 1
+                                            countReqs.text(numRemainReq)
+                                            countReqs.toggle(numRemainReq != 0)
+                                        }
+                                    })
+                                })
+                            })
+                            setTimeout(() => {
+                                let jContent = jPopUp.find('.pop-up > .content')
+                                jContent.width(jContent.width()) // Fix giá trị width
+                            }, 1000)
+                        }
+                    })
+                },
+                scriptAfterAppend: (jPopUp) => resizeImg(jPopUp.find('.content .group img'))
+            })
+        })
+    </script>
+
+    <script src="./main.js"></script>
+</body>
+
+</html>
