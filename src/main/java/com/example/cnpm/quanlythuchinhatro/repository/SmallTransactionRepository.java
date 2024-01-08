@@ -31,21 +31,27 @@ public interface SmallTransactionRepository extends JpaRepository<SmallTransacti
 
     @Query("SELECT id FROM User WHERE username = :username ")
     Integer convertUsernameToUserId (String username);
+
+    @Query("SELECT st FROM SmallTransaction st WHERE st.roomId = :roomId AND FUNCTION('MONTH', FUNCTION('DATE_FORMAT', st.transactionTime, '%Y-%m-%dT%H:%i:%s.%fZ')) = :month")
+    List<SmallTransaction> findByRoomIdAndMonth(@Param("roomId") Integer roomId, @Param("month") Integer month);
 //    @Query("SELECT SUM(st.price) FROM SmallTransaction st WHERE st.userId = :userId AND st.roomId = :roomId")
 //    BigDecimal sumSpentByUserInRoom(Integer userId, Integer roomId);
 //    @Query("SELECT (SUM(s.price)/(COUNT(DISTINCT s.userId))) AS averageRoom FROM SmallTransaction s WHERE s.roomId = :roomId")
 //    BigDecimal averageSpentInRoom(Integer roomId);
 
     @Query(value = """
-
-   SELECT\s
+   SELECT
         SUM(s.price) AS sumUser
-    FROM\s
+    FROM
         small_transaction s\s
-    WHERE\s
-        DATE_FORMAT(s.transaction_time, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m')
+    WHERE
+        s.room_id = :roomId
+        AND s.user_id = :userId
+        AND DATE_FORMAT(s.transaction_time, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m')
+
     """, nativeQuery = true)
     BigDecimal sumSpentByUserInRoom(Integer userId, Integer roomId);
+
     @Query(value = """
     SELECT\s
         SUM(s.price) / COUNT(DISTINCT s.user_id) AS averageRoom
@@ -53,6 +59,7 @@ public interface SmallTransactionRepository extends JpaRepository<SmallTransacti
         small_transaction s\s
     WHERE\s
         DATE_FORMAT(s.transaction_time, '%Y-%m') = DATE_FORMAT(CURRENT_DATE(), '%Y-%m')
+        AND s.room_id = :roomId
     """,nativeQuery = true)
     BigDecimal averageSpentInRoom(Integer roomId);
 
