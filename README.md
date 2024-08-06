@@ -3,7 +3,7 @@ Thực hiện các chức năng chính:
 - quản lí thành viên phòng, tạo nhiều cộng đồng phòng khác nhau
 - Quản lí chi tiêu cá nhân, quản lí chi tiêu trong từng phòng, thống kê, thông báo
 
-Mã Nguồn sử dụng Java Spring boot Restful API để xây dựng backend và frontend.
+Mã Nguồn sử dụng Java Spring boot Restful API để xây dựng backend và frontend sử dụng jquery
 Hướng dẫn sử dụng:
 - Cài đặt JDK
 - Cài đặt mySQL
