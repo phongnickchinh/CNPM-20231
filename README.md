@@ -119,12 +119,3 @@ Key entities in the system include:
 - View statistics to understand spending patterns
 - Use room management features to organize members and permissions
 
----
-
-## 👥 Contributors
-- [List project team members here]
-
----
-
-## 📄 License
-[Include license information if applicable]
